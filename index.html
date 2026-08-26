@@ -5212,23 +5212,47 @@ body.dark-mode .empty {
     overflow:hidden !important;
   }
   .blind-target::after { content:none !important; display:none !important; }
+  .example-jp-row { align-items:center; min-width:0; }
+  .example-jp-row .blind-target { flex:0 1 auto !important; }
+}
+</style>
 
-  /* 예문은 원래 세로 블록 구조를 유지한다.
-     공통 blind-target의 inline-block 전환이
-     일본어/히라가나 블라인드 시 다음 줄(발음/뜻)을 위로 밀어 올리지 않게 한다. */
-  .example .example-hira.blind-target,
+
+<style id="mobile-example-blind-layout-final">
+@media (max-width:700px){
+  /* 예문은 일반 blind-target의 inline-block 규칙을 받지 않고
+     원래의 세로 레이아웃을 그대로 유지한다. */
+  .example .blind-target {
+    box-sizing: border-box !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+  }
+
+  .example .example-jp-row .example-jp.blind-target {
+    display: block !important;
+    width: max-content !important;
+    flex: 0 1 auto !important;
+    line-height: inherit !important;
+  }
+
+  .example .example-hira.blind-target {
+    display: block !important;
+    width: max-content !important;
+    line-height: inherit !important;
+    margin-top: 2px !important;
+  }
+
   .example .example-korean-reading.blind-target,
   .example .example-meaning.blind-target {
-    display:block !important;
-    width:max-content !important;
-    max-width:100% !important;
+    display: block !important;
+    width: max-content !important;
+    line-height: inherit !important;
   }
-  .example-jp-row .example-jp.blind-target {
-    display:block !important;
-    width:max-content !important;
-    max-width:100% !important;
-    flex:0 1 auto !important;
-  }
-  .example-jp-row { align-items:center; min-width:0; }
 }
 </style>
