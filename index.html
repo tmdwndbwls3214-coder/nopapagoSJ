@@ -5055,6 +5055,17 @@ body.dark-mode .empty {
 }
 </style>
 
+<style id="mobile-lightmode-nav-active">
+/* 모바일 라이트모드 하단 네비 선택 상태만 조금 더 선명하게 */
+@media (max-width:700px){
+  body:not(.dark-mode) .mobile-bottom-nav .mobile-nav-btn.active {
+    background:#f6dce5 !important;
+    color:#a95f78 !important;
+    border:1px solid #dca8ba !important;
+    box-shadow:none !important;
+  }
+}
+</style>
 
 <style id="mobile-darkmode-final-match">
 /* 모바일 다크모드에서만 적용 — 데스크톱은 절대 변경하지 않음 */
