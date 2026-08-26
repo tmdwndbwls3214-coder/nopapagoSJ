@@ -4335,6 +4335,112 @@ body.dark-mode textarea::placeholder {
 }
 </style>
 
+
+<style id="mobile-blind-card-stable-height">
+@media (max-width:700px){
+  /* 블라인드 전후 카드 높이가 변하지 않도록, 현재 카드의 실제 높이를 유지 */
+  .word-card.mobile-stable-card-height {
+    height: var(--mobile-card-stable-height) !important;
+    min-height: var(--mobile-card-stable-height) !important;
+    box-sizing: border-box !important;
+  }
+}
+</style>
+<script>
+(function(){
+  function isMobile(){ return window.matchMedia('(max-width:700px)').matches; }
+  function hasBlind(card){ return !!card.querySelector('.blind-target, .char-blinded'); }
+  function measureCard(card){
+    if (!isMobile() || !card || hasBlind(card)) return;
+    card.classList.remove('mobile-stable-card-height');
+    card.style.removeProperty('--mobile-card-stable-height');
+    var h = Math.ceil(card.getBoundingClientRect().height);
+    if (h > 0) {
+      card.style.setProperty('--mobile-card-stable-height', h + 'px');
+      card.classList.add('mobile-stable-card-height');
+    }
+  }
+  function measureAll(){
+    if (!isMobile()) return;
+    document.querySelectorAll('.word-card').forEach(measureCard);
+  }
+  function schedule(){ requestAnimationFrame(function(){ requestAnimationFrame(measureAll); }); }
+
+  document.addEventListener('DOMContentLoaded', schedule);
+  window.addEventListener('load', schedule);
+  window.addEventListener('resize', function(){
+    document.querySelectorAll('.word-card').forEach(function(card){
+      card.classList.remove('mobile-stable-card-height');
+      card.style.removeProperty('--mobile-card-stable-height');
+    });
+    schedule();
+  });
+
+  var observer = new MutationObserver(function(mutations){
+    var needsMeasure = false;
+    mutations.forEach(function(m){
+      if (m.type !== 'childList' && m.type !== 'attributes') return;
+      var target = m.target && m.target.closest ? m.target.closest('.word-card') : null;
+      if (target && !hasBlind(target)) needsMeasure = true;
+      if (m.addedNodes) m.addedNodes.forEach(function(n){
+        if (n.nodeType === 1) {
+          if (n.matches && n.matches('.word-card')) needsMeasure = true;
+          if (n.querySelector && n.querySelector('.word-card')) needsMeasure = true;
+        }
+      });
+    });
+    if (needsMeasure) schedule();
+  });
+  document.addEventListener('DOMContentLoaded', function(){
+    observer.observe(document.body, {subtree:true, childList:true, attributes:true, attributeFilter:['class','style']});
+  });
+})();
+</script>
+
+<style id="mobile-blind-vertical-exact">
+@media (max-width:700px){
+  /* 블라인드가 요소의 줄 높이/세로 박스를 바꾸지 않도록 원래 레이아웃 타입을 유지 */
+  .word-card > .japanese-row > .japanese.blind-target,
+  .word-card > .hiragana.blind-target,
+  .word-card > .korean-reading.blind-target,
+  .word-card > .meaning.blind-target,
+  .word-card .example-jp-row > .example-jp.blind-target,
+  .word-card .example-hira.blind-target,
+  .word-card .example-korean-reading.blind-target,
+  .word-card .example-meaning.blind-target {
+    display:block !important;
+    width:fit-content !important;
+    max-width:100% !important;
+    min-width:0 !important;
+    height:auto !important;
+    min-height:0 !important;
+    max-height:none !important;
+    box-sizing:border-box !important;
+    white-space:nowrap !important;
+    overflow:hidden !important;
+    vertical-align:baseline !important;
+  }
+
+  /* 일본어는 flex 행의 자식이므로 block이어도 행 높이를 원래 일본어 줄 높이로 유지 */
+  .word-card > .japanese-row > .japanese.blind-target,
+  .word-card .example-jp-row > .example-jp.blind-target {
+    flex:0 0 auto !important;
+    align-self:baseline !important;
+  }
+
+  /* 블라인드 자체에는 세로 여백을 추가하지 않는다. 기존 카드의 여백/line-height는 그대로 사용 */
+  .word-card .blind-target {
+    padding-top:3px !important;
+    padding-bottom:3px !important;
+  }
+
+  /* blur가 레이아웃 높이를 만들지 않도록 pseudo 요소는 사용하지 않는다 */
+  .word-card .blind-target::after {
+    content:none !important;
+    display:none !important;
+  }
+}
+</style>
 </body>
 
 <style id="darkmode-quiz-nav-fix">
@@ -5214,45 +5320,5 @@ body.dark-mode .empty {
   .blind-target::after { content:none !important; display:none !important; }
   .example-jp-row { align-items:center; min-width:0; }
   .example-jp-row .blind-target { flex:0 1 auto !important; }
-}
-</style>
-
-
-<style id="mobile-example-blind-layout-final">
-@media (max-width:700px){
-  /* 예문은 일반 blind-target의 inline-block 규칙을 받지 않고
-     원래의 세로 레이아웃을 그대로 유지한다. */
-  .example .blind-target {
-    box-sizing: border-box !important;
-    white-space: nowrap !important;
-    overflow: hidden !important;
-    max-width: 100% !important;
-    min-width: 0 !important;
-    padding-top: 0 !important;
-    padding-bottom: 0 !important;
-    margin-top: 0 !important;
-    margin-bottom: 0 !important;
-  }
-
-  .example .example-jp-row .example-jp.blind-target {
-    display: block !important;
-    width: max-content !important;
-    flex: 0 1 auto !important;
-    line-height: inherit !important;
-  }
-
-  .example .example-hira.blind-target {
-    display: block !important;
-    width: max-content !important;
-    line-height: inherit !important;
-    margin-top: 2px !important;
-  }
-
-  .example .example-korean-reading.blind-target,
-  .example .example-meaning.blind-target {
-    display: block !important;
-    width: max-content !important;
-    line-height: inherit !important;
-  }
 }
 </style>
