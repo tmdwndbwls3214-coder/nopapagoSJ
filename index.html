@@ -4438,6 +4438,56 @@ body.dark-mode textarea::placeholder {
   }
 }
 </style>
+
+<style>
+@media (max-width:700px){
+  /* 예문 블라인드: 실제 텍스트 높이를 유지해 레이아웃 변화 방지 */
+  .example .blind-target{
+    padding-top:0 !important;
+    padding-bottom:0 !important;
+    box-sizing:border-box !important;
+    line-height:inherit !important;
+    height:var(--example-blind-height, auto) !important;
+    min-height:var(--example-blind-height, 0px) !important;
+    max-height:var(--example-blind-height, none) !important;
+  }
+}
+</style>
+<script>
+(function(){
+  function syncExampleBlindHeights(){
+    document.querySelectorAll('.example .blind-target').forEach(function(el){
+      if (!el.dataset.blindNaturalHeight){
+        const wasBlind = el.classList.contains('blind-target');
+        el.classList.remove('blind-target');
+        const h = el.getBoundingClientRect().height;
+        if (wasBlind) el.classList.add('blind-target');
+        if (h > 0) el.dataset.blindNaturalHeight = String(h);
+      }
+      const h = parseFloat(el.dataset.blindNaturalHeight);
+      if (h > 0) el.style.setProperty('--example-blind-height', h + 'px');
+    });
+  }
+  window.syncExampleBlindHeights = syncExampleBlindHeights;
+  window.addEventListener('resize', function(){
+    document.querySelectorAll('.example .blind-target').forEach(function(el){
+      delete el.dataset.blindNaturalHeight;
+      el.style.removeProperty('--example-blind-height');
+    });
+    requestAnimationFrame(syncExampleBlindHeights);
+  });
+  const observer = new MutationObserver(function(){
+    requestAnimationFrame(syncExampleBlindHeights);
+  });
+  function start(){
+    syncExampleBlindHeights();
+    observer.observe(document.body,{subtree:true,childList:true,attributes:true,attributeFilter:['class']});
+  }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded',start);
+  else start();
+})();
+</script>
+
 </body>
 
 <style id="darkmode-quiz-nav-fix">
