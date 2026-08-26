@@ -4335,67 +4335,6 @@ body.dark-mode textarea::placeholder {
 }
 </style>
 
-
-<style id="mobile-blind-card-stable-height">
-@media (max-width:700px){
-  /* 블라인드 전후 카드 높이가 변하지 않도록, 현재 카드의 실제 높이를 유지 */
-  .word-card.mobile-stable-card-height {
-    height: var(--mobile-card-stable-height) !important;
-    min-height: var(--mobile-card-stable-height) !important;
-    box-sizing: border-box !important;
-  }
-}
-</style>
-<script>
-(function(){
-  function isMobile(){ return window.matchMedia('(max-width:700px)').matches; }
-  function hasBlind(card){ return !!card.querySelector('.blind-target, .char-blinded'); }
-  function measureCard(card){
-    if (!isMobile() || !card || hasBlind(card)) return;
-    card.classList.remove('mobile-stable-card-height');
-    card.style.removeProperty('--mobile-card-stable-height');
-    var h = Math.ceil(card.getBoundingClientRect().height);
-    if (h > 0) {
-      card.style.setProperty('--mobile-card-stable-height', h + 'px');
-      card.classList.add('mobile-stable-card-height');
-    }
-  }
-  function measureAll(){
-    if (!isMobile()) return;
-    document.querySelectorAll('.word-card').forEach(measureCard);
-  }
-  function schedule(){ requestAnimationFrame(function(){ requestAnimationFrame(measureAll); }); }
-
-  document.addEventListener('DOMContentLoaded', schedule);
-  window.addEventListener('load', schedule);
-  window.addEventListener('resize', function(){
-    document.querySelectorAll('.word-card').forEach(function(card){
-      card.classList.remove('mobile-stable-card-height');
-      card.style.removeProperty('--mobile-card-stable-height');
-    });
-    schedule();
-  });
-
-  var observer = new MutationObserver(function(mutations){
-    var needsMeasure = false;
-    mutations.forEach(function(m){
-      if (m.type !== 'childList' && m.type !== 'attributes') return;
-      var target = m.target && m.target.closest ? m.target.closest('.word-card') : null;
-      if (target && !hasBlind(target)) needsMeasure = true;
-      if (m.addedNodes) m.addedNodes.forEach(function(n){
-        if (n.nodeType === 1) {
-          if (n.matches && n.matches('.word-card')) needsMeasure = true;
-          if (n.querySelector && n.querySelector('.word-card')) needsMeasure = true;
-        }
-      });
-    });
-    if (needsMeasure) schedule();
-  });
-  document.addEventListener('DOMContentLoaded', function(){
-    observer.observe(document.body, {subtree:true, childList:true, attributes:true, attributeFilter:['class','style']});
-  });
-})();
-</script>
 </body>
 
 <style id="darkmode-quiz-nav-fix">
@@ -5273,105 +5212,23 @@ body.dark-mode .empty {
     overflow:hidden !important;
   }
   .blind-target::after { content:none !important; display:none !important; }
+
+  /* 예문은 원래 세로 블록 구조를 유지한다.
+     공통 blind-target의 inline-block 전환이
+     일본어/히라가나 블라인드 시 다음 줄(발음/뜻)을 위로 밀어 올리지 않게 한다. */
+  .example .example-hira.blind-target,
+  .example .example-korean-reading.blind-target,
+  .example .example-meaning.blind-target {
+    display:block !important;
+    width:max-content !important;
+    max-width:100% !important;
+  }
+  .example-jp-row .example-jp.blind-target {
+    display:block !important;
+    width:max-content !important;
+    max-width:100% !important;
+    flex:0 1 auto !important;
+  }
   .example-jp-row { align-items:center; min-width:0; }
-  .example-jp-row .blind-target { flex:0 1 auto !important; }
 }
 </style>
-
-
-<style id="mobile-example-natural-blind-size">
-@media (max-width:700px){
-  /*
-    mobile_card_fixed의 카드 높이 고정은 그대로 둔다.
-    예문 일본어/히라가나 블라인드 요소만 블라인드 직전의 자연 크기(width/height)를 유지한다.
-    높이를 임의의 고정값으로 정하지 않고 실제 렌더링 크기를 복제해 사용한다.
-  */
-  .example-jp-row .example-jp.blind-target,
-  .example-hira.blind-target {
-    box-sizing: border-box !important;
-    flex: 0 0 auto !important;
-    overflow: hidden !important;
-    white-space: nowrap !important;
-  }
-}
-</style>
-<script id="mobile-example-natural-blind-size-js">
-(function(){
-  function isMobile(){ return window.matchMedia('(max-width:700px)').matches; }
-
-  function naturalSize(el){
-    var clone = el.cloneNode(true);
-    clone.classList.remove('blind-target');
-    clone.removeAttribute('data-mobile-natural-size');
-    clone.style.cssText = '';
-    clone.style.position = 'absolute';
-    clone.style.visibility = 'hidden';
-    clone.style.pointerEvents = 'none';
-    clone.style.left = '-100000px';
-    clone.style.top = '0';
-    clone.style.margin = getComputedStyle(el).margin;
-    clone.style.padding = getComputedStyle(el).padding;
-    clone.style.boxSizing = getComputedStyle(el).boxSizing;
-    clone.style.whiteSpace = 'nowrap';
-    clone.style.width = 'max-content';
-    clone.style.maxWidth = 'none';
-    clone.style.minWidth = '0';
-    clone.style.height = 'auto';
-    clone.style.transform = 'none';
-    clone.style.filter = 'none';
-    clone.style.opacity = '1';
-    document.body.appendChild(clone);
-    var r = clone.getBoundingClientRect();
-    var w = Math.ceil(r.width);
-    var h = Math.ceil(r.height);
-    clone.remove();
-    return {w:w, h:h};
-  }
-
-  function fix(el){
-    if(!isMobile() || !el || !el.classList.contains('blind-target')) return;
-    if(el.dataset.mobileNaturalSize === '1') return;
-    var s = naturalSize(el);
-    if(s.w > 0) el.style.setProperty('width', s.w + 'px', 'important');
-    if(s.h > 0) el.style.setProperty('height', s.h + 'px', 'important');
-    el.dataset.mobileNaturalSize = '1';
-  }
-
-  function clear(el){
-    if(!el || el.classList.contains('blind-target')) return;
-    if(el.dataset.mobileNaturalSize === '1'){
-      el.style.removeProperty('width');
-      el.style.removeProperty('height');
-      delete el.dataset.mobileNaturalSize;
-    }
-  }
-
-  function scan(root){
-    if(!isMobile()) return;
-    (root.querySelectorAll ? root.querySelectorAll('.example-jp, .example-hira') : []).forEach(function(el){
-      if(el.classList.contains('blind-target')) fix(el);
-      else clear(el);
-    });
-  }
-
-  function schedule(){
-    requestAnimationFrame(function(){
-      requestAnimationFrame(function(){ scan(document); });
-    });
-  }
-
-  document.addEventListener('DOMContentLoaded', schedule);
-  window.addEventListener('load', schedule);
-  window.addEventListener('resize', schedule);
-
-  var observer = new MutationObserver(function(mutations){
-    var shouldScan = false;
-    mutations.forEach(function(m){
-      if(m.type === 'childList') shouldScan = true;
-      if(m.type === 'attributes' && m.attributeName === 'class') shouldScan = true;
-    });
-    if(shouldScan) schedule();
-  });
-  observer.observe(document.documentElement, {subtree:true, childList:true, attributes:true, attributeFilter:['class']});
-})();
-</script>
