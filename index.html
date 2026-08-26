@@ -4397,97 +4397,58 @@ body.dark-mode textarea::placeholder {
 })();
 </script>
 
-<style id="mobile-example-blind-structural-fix">
-/* 모바일 예문 블라인드만 레이아웃을 건드리지 않도록 정리
-   본문 카드 높이 고정 로직은 그대로 둡니다. */
+
+
+
+
+
+<style id="mobile-example-layout-only-blur">
+/*
+  모바일 예문 전용:
+  블라인드 상태에서도 예문 텍스트의 원래 레이아웃(display/line-height/height)을 유지한다.
+  가로 폭만 텍스트에 맞추고, 세로 크기는 브라우저의 원래 line box에 맡긴다.
+  본문(.word-card의 일반 요소)에는 적용하지 않는다.
+*/
 @media (max-width:700px){
-  .example .blind-target {
-    display:inline-block !important;
-    width:max-content !important;
-    max-width:100% !important;
-    min-width:0 !important;
+  .example .blind-target{
     box-sizing:border-box !important;
-    white-space:nowrap !important;
-    overflow:hidden !important;
-    /* 기존 모바일 공통 blind-target의 세로 padding 때문에
-       예문 한 줄 자체가 커지는 것을 막음 */
     padding-top:0 !important;
     padding-bottom:0 !important;
     margin-top:0 !important;
     margin-bottom:0 !important;
+    height:auto !important;
+    min-height:0 !important;
+    max-height:none !important;
     line-height:inherit !important;
     vertical-align:baseline !important;
+    overflow:visible !important;
+    white-space:normal !important;
   }
 
-  .example-jp-row {
-    display:flex !important;
-    align-items:baseline !important;
-    min-width:0 !important;
-    line-height:inherit !important;
-  }
-
-  .example-jp-row .example-jp {
+  /* 예문 일본어는 스피커와 같은 flex 행 안에서 원래 텍스트 크기를 유지 */
+  .example-jp-row .example-jp.blind-target{
+    display:block !important;
+    width:max-content !important;
+    max-width:calc(100% - 28px) !important;
     flex:0 1 auto !important;
-    min-width:0 !important;
   }
 
-  .example-hira,
-  .example-korean-reading,
-  .example-meaning {
-    line-height:inherit !important;
+  /* 나머지 예문 줄은 원래의 block 레이아웃을 유지 */
+  .example-hira.blind-target,
+  .example-korean-reading.blind-target,
+  .example-meaning.blind-target{
+    display:block !important;
+    width:fit-content !important;
+    max-width:100% !important;
+  }
+
+  /* 블라인드의 시각 효과만 유지. 레이아웃에는 영향 없음 */
+  .example .blind-target::after{
+    content:none !important;
+    display:none !important;
   }
 }
 </style>
-
-<style>
-@media (max-width:700px){
-  /* 예문 블라인드: 실제 텍스트 높이를 유지해 레이아웃 변화 방지 */
-  .example .blind-target{
-    padding-top:0 !important;
-    padding-bottom:0 !important;
-    box-sizing:border-box !important;
-    line-height:inherit !important;
-    height:var(--example-blind-height, auto) !important;
-    min-height:var(--example-blind-height, 0px) !important;
-    max-height:var(--example-blind-height, none) !important;
-  }
-}
-</style>
-<script>
-(function(){
-  function syncExampleBlindHeights(){
-    document.querySelectorAll('.example .blind-target').forEach(function(el){
-      if (!el.dataset.blindNaturalHeight){
-        const wasBlind = el.classList.contains('blind-target');
-        el.classList.remove('blind-target');
-        const h = el.getBoundingClientRect().height;
-        if (wasBlind) el.classList.add('blind-target');
-        if (h > 0) el.dataset.blindNaturalHeight = String(h);
-      }
-      const h = parseFloat(el.dataset.blindNaturalHeight);
-      if (h > 0) el.style.setProperty('--example-blind-height', h + 'px');
-    });
-  }
-  window.syncExampleBlindHeights = syncExampleBlindHeights;
-  window.addEventListener('resize', function(){
-    document.querySelectorAll('.example .blind-target').forEach(function(el){
-      delete el.dataset.blindNaturalHeight;
-      el.style.removeProperty('--example-blind-height');
-    });
-    requestAnimationFrame(syncExampleBlindHeights);
-  });
-  const observer = new MutationObserver(function(){
-    requestAnimationFrame(syncExampleBlindHeights);
-  });
-  function start(){
-    syncExampleBlindHeights();
-    observer.observe(document.body,{subtree:true,childList:true,attributes:true,attributeFilter:['class']});
-  }
-  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded',start);
-  else start();
-})();
-</script>
-
 </body>
 
 <style id="darkmode-quiz-nav-fix">
