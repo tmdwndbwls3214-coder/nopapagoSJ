@@ -4396,59 +4396,6 @@ body.dark-mode textarea::placeholder {
   });
 })();
 </script>
-
-
-
-
-
-
-<style id="mobile-example-layout-only-blur">
-/*
-  모바일 예문 전용:
-  블라인드 상태에서도 예문 텍스트의 원래 레이아웃(display/line-height/height)을 유지한다.
-  가로 폭만 텍스트에 맞추고, 세로 크기는 브라우저의 원래 line box에 맡긴다.
-  본문(.word-card의 일반 요소)에는 적용하지 않는다.
-*/
-@media (max-width:700px){
-  .example .blind-target{
-    box-sizing:border-box !important;
-    padding-top:0 !important;
-    padding-bottom:0 !important;
-    margin-top:0 !important;
-    margin-bottom:0 !important;
-    height:auto !important;
-    min-height:0 !important;
-    max-height:none !important;
-    line-height:inherit !important;
-    vertical-align:baseline !important;
-    overflow:visible !important;
-    white-space:normal !important;
-  }
-
-  /* 예문 일본어는 스피커와 같은 flex 행 안에서 원래 텍스트 크기를 유지 */
-  .example-jp-row .example-jp.blind-target{
-    display:block !important;
-    width:max-content !important;
-    max-width:calc(100% - 28px) !important;
-    flex:0 1 auto !important;
-  }
-
-  /* 나머지 예문 줄은 원래의 block 레이아웃을 유지 */
-  .example-hira.blind-target,
-  .example-korean-reading.blind-target,
-  .example-meaning.blind-target{
-    display:block !important;
-    width:fit-content !important;
-    max-width:100% !important;
-  }
-
-  /* 블라인드의 시각 효과만 유지. 레이아웃에는 영향 없음 */
-  .example .blind-target::after{
-    content:none !important;
-    display:none !important;
-  }
-}
-</style>
 </body>
 
 <style id="darkmode-quiz-nav-fix">
@@ -5328,5 +5275,27 @@ body.dark-mode .empty {
   .blind-target::after { content:none !important; display:none !important; }
   .example-jp-row { align-items:center; min-width:0; }
   .example-jp-row .blind-target { flex:0 1 auto !important; }
+}
+</style>
+
+<style id="mobile-example-blind-horizontal-only">
+@media (max-width:700px){
+  /* 예문은 기존 카드 높이/레이아웃을 그대로 두고 가로 폭만 텍스트에 맞춤 */
+  .example .example-jp.blind-target,
+  .example .example-hira.blind-target,
+  .example .example-korean-reading.blind-target,
+  .example .example-meaning.blind-target {
+    display:inline-block !important;
+    width:fit-content !important;
+    max-width:100% !important;
+    min-width:0 !important;
+    box-sizing:border-box !important;
+    white-space:nowrap !important;
+    overflow:hidden !important;
+    vertical-align:baseline !important;
+  }
+  .example .example-jp-row .blind-target {
+    flex:0 0 auto !important;
+  }
 }
 </style>
