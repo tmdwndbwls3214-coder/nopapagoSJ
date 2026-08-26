@@ -4396,6 +4396,63 @@ body.dark-mode textarea::placeholder {
   });
 })();
 </script>
+
+
+<style id="mobile-example-stable-height-only">
+@media (max-width:700px){
+  /* 예문만: 본문 카드 높이 고정 로직은 건드리지 않고,
+     예문 블라인드 전후 부모 높이만 유지 */
+  .word-card .example.mobile-stable-example-height {
+    height: var(--mobile-example-stable-height) !important;
+    min-height: var(--mobile-example-stable-height) !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
+  }
+}
+</style>
+<script>
+(function(){
+  function isMobile(){ return window.matchMedia('(max-width:700px)').matches; }
+  function measureExamples(){
+    if (!isMobile()) return;
+    document.querySelectorAll('.word-card .example').forEach(function(example){
+      if (!example || example.classList.contains('mobile-stable-example-height')) return;
+      var h = Math.ceil(example.getBoundingClientRect().height);
+      if (h > 0) {
+        example.style.setProperty('--mobile-example-stable-height', h + 'px');
+        example.classList.add('mobile-stable-example-height');
+      }
+    });
+  }
+  function schedule(){
+    requestAnimationFrame(function(){ requestAnimationFrame(measureExamples); });
+  }
+  document.addEventListener('DOMContentLoaded', schedule);
+  window.addEventListener('load', schedule);
+  window.addEventListener('resize', function(){
+    if (!isMobile()) return;
+    document.querySelectorAll('.word-card .example').forEach(function(example){
+      example.classList.remove('mobile-stable-example-height');
+      example.style.removeProperty('--mobile-example-stable-height');
+    });
+    schedule();
+  });
+  var observer = new MutationObserver(function(mutations){
+    var added = false;
+    mutations.forEach(function(m){
+      if (m.type !== 'childList') return;
+      m.addedNodes && m.addedNodes.forEach(function(n){
+        if (n.nodeType === 1 && (n.matches && n.matches('.word-card')) || (n.querySelector && n.querySelector('.word-card'))) added = true;
+      });
+    });
+    if (added) schedule();
+  });
+  document.addEventListener('DOMContentLoaded', function(){
+    observer.observe(document.body, {subtree:true, childList:true});
+  });
+})();
+</script>
+
 </body>
 
 <style id="darkmode-quiz-nav-fix">
@@ -5275,39 +5332,5 @@ body.dark-mode .empty {
   .blind-target::after { content:none !important; display:none !important; }
   .example-jp-row { align-items:center; min-width:0; }
   .example-jp-row .blind-target { flex:0 1 auto !important; }
-}
-</style>
-<style id="mobile-example-vertical-only-fix">
-@media (max-width:700px){
-  /* 예문만 블라인드 상태에서 세로 높이가 커지지 않도록 제한.
-     본문 카드 높이 고정/블라인드 동작은 바로 전 버전 그대로 유지. */
-  .example-jp-row,
-  .example-jp-row > *,
-  .example-reading,
-  .example-korean,
-  .example-meaning,
-  .example-text,
-  .example-hiragana,
-  .example-jp,
-  .example-ko {
-    min-height:0 !important;
-    max-height:1.7em !important;
-    line-height:1.7 !important;
-    box-sizing:border-box !important;
-  }
-  .example-jp-row .blind-target,
-  .example-reading .blind-target,
-  .example-korean .blind-target,
-  .example-meaning .blind-target,
-  .example-text .blind-target,
-  .example-hiragana .blind-target,
-  .example-jp .blind-target,
-  .example-ko .blind-target {
-    height:1.7em !important;
-    max-height:1.7em !important;
-    min-height:0 !important;
-    overflow:hidden !important;
-    vertical-align:middle !important;
-  }
 }
 </style>
