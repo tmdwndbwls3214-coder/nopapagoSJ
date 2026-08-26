@@ -5057,6 +5057,34 @@ body.dark-mode .empty {
     border-color:#4b3941 !important;
   }
 
+  /* 모바일 퀴즈 방식: "퀴즈 방식" 텍스트를 포함한 실제 그룹 배경 */
+  body.dark-mode .quiz-mode-group {
+    background:#211b1f !important;
+    color:#e7dfe3 !important;
+    border:1px solid #49363e !important;
+    border-radius:14px !important;
+    box-shadow:none !important;
+  }
+
+  body.dark-mode .quiz-mode-title {
+    color:#d9cbd0 !important;
+  }
+
+  /* 모바일 퀴즈 방식 버튼은 기존 다크모드 버튼 계열 유지 */
+  body.dark-mode .quiz-mode-buttons .quiz-mode-btn {
+    background:#302329 !important;
+    color:#eee !important;
+    border-color:#684654 !important;
+  }
+
+  /* 하단 네비 선택 상태: 흰색 대신 다크모드 선택 영역과 같은 계열 */
+  body.dark-mode .mobile-bottom-nav .mobile-nav-btn.active {
+    background:#302329 !important;
+    color:#e7a6bc !important;
+    border:1px solid #684654 !important;
+    box-shadow:none !important;
+  }
+
   /* 첫 문제 / 이전 문제 / 학습 화면 / 다음 문제를 담는 바깥 영역 */
   body.dark-mode .toolbar {
     background:#211b1f !important;
