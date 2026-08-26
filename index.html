@@ -5277,37 +5277,101 @@ body.dark-mode .empty {
   .example-jp-row .blind-target { flex:0 1 auto !important; }
 }
 </style>
-<style id="mobile-example-vertical-only-fix">
+
+
+<style id="mobile-example-natural-blind-size">
 @media (max-width:700px){
-  /* 예문만 블라인드 상태에서 세로 높이가 커지지 않도록 제한.
-     본문 카드 높이 고정/블라인드 동작은 바로 전 버전 그대로 유지. */
-  .example-jp-row,
-  .example-jp-row > *,
-  .example-reading,
-  .example-korean,
-  .example-meaning,
-  .example-text,
-  .example-hiragana,
-  .example-jp,
-  .example-ko {
-    min-height:0 !important;
-    max-height:1.7em !important;
-    line-height:1.7 !important;
-    box-sizing:border-box !important;
-  }
-  .example-jp-row .blind-target,
-  .example-reading .blind-target,
-  .example-korean .blind-target,
-  .example-meaning .blind-target,
-  .example-text .blind-target,
-  .example-hiragana .blind-target,
-  .example-jp .blind-target,
-  .example-ko .blind-target {
-    height:1.7em !important;
-    max-height:1.7em !important;
-    min-height:0 !important;
-    overflow:hidden !important;
-    vertical-align:middle !important;
+  /*
+    mobile_card_fixed의 카드 높이 고정은 그대로 둔다.
+    예문 일본어/히라가나 블라인드 요소만 블라인드 직전의 자연 크기(width/height)를 유지한다.
+    높이를 임의의 고정값으로 정하지 않고 실제 렌더링 크기를 복제해 사용한다.
+  */
+  .example-jp-row .example-jp.blind-target,
+  .example-hira.blind-target {
+    box-sizing: border-box !important;
+    flex: 0 0 auto !important;
+    overflow: hidden !important;
+    white-space: nowrap !important;
   }
 }
 </style>
+<script id="mobile-example-natural-blind-size-js">
+(function(){
+  function isMobile(){ return window.matchMedia('(max-width:700px)').matches; }
+
+  function naturalSize(el){
+    var clone = el.cloneNode(true);
+    clone.classList.remove('blind-target');
+    clone.removeAttribute('data-mobile-natural-size');
+    clone.style.cssText = '';
+    clone.style.position = 'absolute';
+    clone.style.visibility = 'hidden';
+    clone.style.pointerEvents = 'none';
+    clone.style.left = '-100000px';
+    clone.style.top = '0';
+    clone.style.margin = getComputedStyle(el).margin;
+    clone.style.padding = getComputedStyle(el).padding;
+    clone.style.boxSizing = getComputedStyle(el).boxSizing;
+    clone.style.whiteSpace = 'nowrap';
+    clone.style.width = 'max-content';
+    clone.style.maxWidth = 'none';
+    clone.style.minWidth = '0';
+    clone.style.height = 'auto';
+    clone.style.transform = 'none';
+    clone.style.filter = 'none';
+    clone.style.opacity = '1';
+    document.body.appendChild(clone);
+    var r = clone.getBoundingClientRect();
+    var w = Math.ceil(r.width);
+    var h = Math.ceil(r.height);
+    clone.remove();
+    return {w:w, h:h};
+  }
+
+  function fix(el){
+    if(!isMobile() || !el || !el.classList.contains('blind-target')) return;
+    if(el.dataset.mobileNaturalSize === '1') return;
+    var s = naturalSize(el);
+    if(s.w > 0) el.style.setProperty('width', s.w + 'px', 'important');
+    if(s.h > 0) el.style.setProperty('height', s.h + 'px', 'important');
+    el.dataset.mobileNaturalSize = '1';
+  }
+
+  function clear(el){
+    if(!el || el.classList.contains('blind-target')) return;
+    if(el.dataset.mobileNaturalSize === '1'){
+      el.style.removeProperty('width');
+      el.style.removeProperty('height');
+      delete el.dataset.mobileNaturalSize;
+    }
+  }
+
+  function scan(root){
+    if(!isMobile()) return;
+    (root.querySelectorAll ? root.querySelectorAll('.example-jp, .example-hira') : []).forEach(function(el){
+      if(el.classList.contains('blind-target')) fix(el);
+      else clear(el);
+    });
+  }
+
+  function schedule(){
+    requestAnimationFrame(function(){
+      requestAnimationFrame(function(){ scan(document); });
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', schedule);
+  window.addEventListener('load', schedule);
+  window.addEventListener('resize', schedule);
+
+  var observer = new MutationObserver(function(mutations){
+    var shouldScan = false;
+    mutations.forEach(function(m){
+      if(m.type === 'childList') shouldScan = true;
+      if(m.type === 'attributes' && m.attributeName === 'class') shouldScan = true;
+    });
+    if(shouldScan) schedule();
+  });
+  observer.observe(document.documentElement, {subtree:true, childList:true, attributes:true, attributeFilter:['class']});
+})();
+</script>
