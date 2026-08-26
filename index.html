@@ -2146,13 +2146,46 @@ function toggleIndividualBlind(field, itemIndex) {
     const item = currentSet && currentSet[itemIndex];
     if (!item || !individualBlind[field]) return;
     const key = itemBlindKey(item);
-    const revealField = field + 'Reveal';
-    const master = field === 'japanese' ? true : field === 'reading' ? showReading : field === 'korean' ? showKoreanReading : field === 'meaning' ? showMeaning : true;
 
-    if (!master && individualBlind[field] instanceof Set) {
-        // 전체 숨김 상태에서는 카드 자체를 눌러 해당 항목만 임시 공개/비공개
-        if (individualBlind[revealField]?.has(key)) individualBlind[revealField].delete(key);
-        else individualBlind[revealField]?.add(key);
+    // 일본어와 히라가나는 하나의 표시 단위로 취급합니다.
+    // 어느 쪽을 눌러도 일본어 + 히라가나가 함께 블라인드됩니다.
+    if (field === 'japanese' || field === 'reading') {
+        const master = showReading;
+        if (!master) {
+            const revealJp = individualBlind.japaneseReveal;
+            const revealReading = individualBlind.readingReveal;
+            const shouldReveal = revealJp.has(key) || revealReading.has(key);
+            if (shouldReveal) {
+                revealJp.delete(key);
+                revealReading.delete(key);
+            } else {
+                revealJp.add(key);
+                revealReading.add(key);
+            }
+        } else {
+            const hidden = individualBlind.japanese.has(key) || individualBlind.reading.has(key);
+            if (hidden) {
+                individualBlind.japanese.delete(key);
+                individualBlind.reading.delete(key);
+            } else {
+                individualBlind.japanese.add(key);
+                individualBlind.reading.add(key);
+            }
+            individualBlind.japaneseReveal.delete(key);
+            individualBlind.readingReveal.delete(key);
+        }
+        renderCurrentSet();
+        return;
+    }
+
+    const revealField = field + 'Reveal';
+    const master = field === 'korean' ? showKoreanReading : field === 'meaning' ? showMeaning : true;
+
+    if (!master) {
+        const revealSet = individualBlind[revealField];
+        if (!revealSet) return;
+        if (revealSet.has(key)) revealSet.delete(key);
+        else revealSet.add(key);
     } else {
         if (individualBlind[field].has(key)) individualBlind[field].delete(key);
         else individualBlind[field].add(key);
@@ -3035,8 +3068,11 @@ function renderWordCard(item, number) {
     const index = Math.max(0, currentSet.indexOf(item));
 
     const key = itemBlindKey(item);
-    const japaneseHidden = !showReading || isIndividuallyBlind('japanese', item);
-    const readingHidden = !showReading || isIndividuallyBlind('reading', item);
+    const jpPairHidden = showReading
+        ? (isIndividuallyBlind('japanese', item) || isIndividuallyBlind('reading', item))
+        : !(individualBlind.japaneseReveal?.has(key) || individualBlind.readingReveal?.has(key));
+    const japaneseHidden = jpPairHidden;
+    const readingHidden = jpPairHidden;
     const koreanHidden = showKoreanReading ? isIndividuallyBlind('korean', item) : !individualBlind.koreanReveal?.has(key);
     const meaningHidden = showMeaning ? isIndividuallyBlind('meaning', item) : !individualBlind.meaningReveal?.has(key);
 
@@ -3060,6 +3096,16 @@ function renderWordCard(item, number) {
     // 예: "考える" ↔ "考える。" / "생각하다 / 고려하다" ↔ "생각하다 / 고려하다."
     // 본문과 일본어/뜻/히라가나/한국발음이 사실상 같은 예문은 표시하지 않습니다.
     const examples = Array.isArray(item?.[4]?.examples) ? item[4].examples : [];
+    const exampleKey = key;
+    const exampleJapaneseHidden = showReading
+        ? (individualBlind.japanese.has(exampleKey) || individualBlind.reading.has(exampleKey))
+        : !(individualBlind.japaneseReveal.has(exampleKey) || individualBlind.readingReveal.has(exampleKey));
+    const exampleKoreanHidden = showKoreanReading
+        ? individualBlind.korean.has(exampleKey)
+        : !individualBlind.koreanReveal.has(exampleKey);
+    const exampleMeaningHidden = showMeaning
+        ? individualBlind.meaning.has(exampleKey)
+        : !individualBlind.meaningReveal.has(exampleKey);
     const normalizeDuplicate = (value) => String(value ?? '')
         .trim()
         .replace(/[「」『』【】［］\[\]（）()〈〉《》]/g, '')
@@ -3104,12 +3150,12 @@ function renderWordCard(item, number) {
             ${example ? `
                 <div class="example">
                     <div class="example-jp-row">
-                        <div class="example-jp">${escapeHtml(example.jp || '')}</div>
+                        <div class="example-jp ${exampleJapaneseHidden ? 'blind-target' : ''}" onclick="event.stopPropagation(); toggleIndividualBlind('japanese', ${index})" title="클릭하여 예문 일본어/히라가나 블라인드/해제">${escapeHtml(example.jp || '')}</div>
                         <button type="button" class="speak-example-btn" data-jp="${encodeURIComponent(example.jp || '')}" onclick="event.stopPropagation(); speakJapanese(decodeURIComponent(this.dataset.jp))" title="예문 일본어 발음 듣기">🔊</button>
                     </div>
-                    ${example.hira ? `<div class="example-hira">${escapeHtml(example.hira)}</div>` : ''}
-                    ${example.pronunciation ? `<div class="example-korean-reading">${escapeHtml(example.pronunciation)}</div>` : ''}
-                    ${example.meaning ? `<div class="example-meaning">${escapeHtml(example.meaning)}</div>` : ''}
+                    ${example.hira ? `<div class="example-hira ${exampleJapaneseHidden ? 'blind-target' : ''}" onclick="event.stopPropagation(); toggleIndividualBlind('reading', ${index})" title="클릭하여 예문 일본어/히라가나 블라인드/해제">${escapeHtml(example.hira)}</div>` : ''}
+                    ${example.pronunciation ? `<div class="example-korean-reading ${exampleKoreanHidden ? 'blind-target' : ''}" onclick="event.stopPropagation(); toggleIndividualBlind('korean', ${index})" title="클릭하여 예문 한글 발음 블라인드/해제">${escapeHtml(example.pronunciation)}</div>` : ''}
+                    ${example.meaning ? `<div class="example-meaning ${exampleMeaningHidden ? 'blind-target' : ''}" onclick="event.stopPropagation(); toggleIndividualBlind('meaning', ${index})" title="클릭하여 예문 뜻 블라인드/해제">${escapeHtml(example.meaning)}</div>` : ''}
                 </div>
             ` : ''}
     `;
@@ -5151,5 +5197,22 @@ body.dark-mode .empty {
     color:#e7e0e3 !important;
     border-color:#49353e !important;
   }
+}
+</style>
+
+<style id="mobile-blind-exact-width">
+@media (max-width:700px){
+  .blind-target {
+    display:inline-block !important;
+    width:max-content !important;
+    max-width:100% !important;
+    min-width:0 !important;
+    box-sizing:border-box !important;
+    white-space:nowrap !important;
+    overflow:hidden !important;
+  }
+  .blind-target::after { content:none !important; display:none !important; }
+  .example-jp-row { align-items:center; min-width:0; }
+  .example-jp-row .blind-target { flex:0 1 auto !important; }
 }
 </style>
