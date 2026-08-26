@@ -5261,6 +5261,46 @@ body.dark-mode .empty {
 }
 </style>
 
+<style id="mobile-example-blind-stable">
+@media (max-width:700px){
+  /* 예문은 블라인드 상태에서도 원래 한 줄 높이만 유지하고 세로로 늘어나지 않게 함 */
+  .example {
+    min-width:0 !important;
+  }
+  .example-jp-row {
+    min-height:0 !important;
+    height:auto !important;
+    align-items:center !important;
+  }
+  .example-jp,
+  .example-hira,
+  .example-korean-reading,
+  .example-meaning {
+    box-sizing:border-box !important;
+    min-height:0 !important;
+    height:auto !important;
+    max-height:1.7em !important;
+    line-height:1.6 !important;
+    vertical-align:middle !important;
+    display:block !important;
+    width:max-content !important;
+    max-width:100% !important;
+    white-space:nowrap !important;
+    overflow:hidden !important;
+  }
+  .example-jp-row .example-jp {
+    display:block !important;
+    flex:0 1 auto !important;
+  }
+  .example .blind-target {
+    padding-top:0 !important;
+    padding-bottom:0 !important;
+    margin-top:0 !important;
+    margin-bottom:0 !important;
+  }
+}
+</style>
+
 <style id="mobile-blind-exact-width">
 @media (max-width:700px){
   .blind-target {
