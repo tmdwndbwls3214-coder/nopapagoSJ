@@ -5202,17 +5202,28 @@ body.dark-mode .empty {
 
 <style id="mobile-blind-exact-width">
 @media (max-width:700px){
+  /* 모바일에서 블라인드 전환 때문에 카드 높이가 줄어들지 않도록
+     원래 블록 요소의 레이아웃은 유지하고, 가로 폭만 내용에 맞춘다. */
   .blind-target {
-    display:inline-block !important;
-    width:max-content !important;
+    box-sizing:border-box !important;
     max-width:100% !important;
     min-width:0 !important;
-    box-sizing:border-box !important;
     white-space:nowrap !important;
     overflow:hidden !important;
   }
+  .japanese.blind-target,
+  .hiragana.blind-target,
+  .korean-reading.blind-target,
+  .meaning.blind-target {
+    display:block !important;
+    width:max-content !important;
+  }
   .blind-target::after { content:none !important; display:none !important; }
   .example-jp-row { align-items:center; min-width:0; }
-  .example-jp-row .blind-target { flex:0 1 auto !important; }
+  .example-jp-row .blind-target {
+    display:inline-block !important;
+    width:max-content !important;
+    flex:0 1 auto !important;
+  }
 }
 </style>
