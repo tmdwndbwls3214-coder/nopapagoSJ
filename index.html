@@ -4396,51 +4396,6 @@ body.dark-mode textarea::placeholder {
   });
 })();
 </script>
-
-<style id="mobile-blind-vertical-exact">
-@media (max-width:700px){
-  /* 블라인드가 요소의 줄 높이/세로 박스를 바꾸지 않도록 원래 레이아웃 타입을 유지 */
-  .word-card > .japanese-row > .japanese.blind-target,
-  .word-card > .hiragana.blind-target,
-  .word-card > .korean-reading.blind-target,
-  .word-card > .meaning.blind-target,
-  .word-card .example-jp-row > .example-jp.blind-target,
-  .word-card .example-hira.blind-target,
-  .word-card .example-korean-reading.blind-target,
-  .word-card .example-meaning.blind-target {
-    display:block !important;
-    width:fit-content !important;
-    max-width:100% !important;
-    min-width:0 !important;
-    height:auto !important;
-    min-height:0 !important;
-    max-height:none !important;
-    box-sizing:border-box !important;
-    white-space:nowrap !important;
-    overflow:hidden !important;
-    vertical-align:baseline !important;
-  }
-
-  /* 일본어는 flex 행의 자식이므로 block이어도 행 높이를 원래 일본어 줄 높이로 유지 */
-  .word-card > .japanese-row > .japanese.blind-target,
-  .word-card .example-jp-row > .example-jp.blind-target {
-    flex:0 0 auto !important;
-    align-self:baseline !important;
-  }
-
-  /* 블라인드 자체에는 세로 여백을 추가하지 않는다. 기존 카드의 여백/line-height는 그대로 사용 */
-  .word-card .blind-target {
-    padding-top:3px !important;
-    padding-bottom:3px !important;
-  }
-
-  /* blur가 레이아웃 높이를 만들지 않도록 pseudo 요소는 사용하지 않는다 */
-  .word-card .blind-target::after {
-    content:none !important;
-    display:none !important;
-  }
-}
-</style>
 </body>
 
 <style id="darkmode-quiz-nav-fix">
@@ -5302,6 +5257,46 @@ body.dark-mode .empty {
     background:#1e191c !important;
     color:#e7e0e3 !important;
     border-color:#49353e !important;
+  }
+}
+</style>
+
+<style id="mobile-example-blind-stable">
+@media (max-width:700px){
+  /* 예문은 블라인드 상태에서도 원래 한 줄 높이만 유지하고 세로로 늘어나지 않게 함 */
+  .example {
+    min-width:0 !important;
+  }
+  .example-jp-row {
+    min-height:0 !important;
+    height:auto !important;
+    align-items:center !important;
+  }
+  .example-jp,
+  .example-hira,
+  .example-korean-reading,
+  .example-meaning {
+    box-sizing:border-box !important;
+    min-height:0 !important;
+    height:auto !important;
+    max-height:1.7em !important;
+    line-height:1.6 !important;
+    vertical-align:middle !important;
+    display:block !important;
+    width:max-content !important;
+    max-width:100% !important;
+    white-space:nowrap !important;
+    overflow:hidden !important;
+  }
+  .example-jp-row .example-jp {
+    display:block !important;
+    flex:0 1 auto !important;
+  }
+  .example .blind-target {
+    padding-top:0 !important;
+    padding-bottom:0 !important;
+    margin-top:0 !important;
+    margin-bottom:0 !important;
   }
 }
 </style>
