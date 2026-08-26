@@ -5261,41 +5261,15 @@ body.dark-mode .empty {
 }
 </style>
 
-<style id="mobile-blind-exact-width">
+<style id="mobile-blind-horizontal-only">
+/* mobile only: keep the working card/vertical layout untouched.
+   Remove only the extra horizontal hover padding/margins from blinded text. */
 @media (max-width:700px){
   .blind-target {
-    display:inline-block !important;
-    width:max-content !important;
-    max-width:100% !important;
-    min-width:0 !important;
-    box-sizing:border-box !important;
-    white-space:nowrap !important;
-    overflow:hidden !important;
-  }
-  .blind-target::after { content:none !important; display:none !important; }
-  .example-jp-row { align-items:center; min-width:0; }
-  .example-jp-row .blind-target { flex:0 1 auto !important; }
-}
-</style>
-
-<style id="mobile-example-blind-horizontal-only">
-@media (max-width:700px){
-  /* 예문은 기존 카드 높이/레이아웃을 그대로 두고 가로 폭만 텍스트에 맞춤 */
-  .example .example-jp.blind-target,
-  .example .example-hira.blind-target,
-  .example .example-korean-reading.blind-target,
-  .example .example-meaning.blind-target {
-    display:inline-block !important;
-    width:fit-content !important;
-    max-width:100% !important;
-    min-width:0 !important;
-    box-sizing:border-box !important;
-    white-space:nowrap !important;
-    overflow:hidden !important;
-    vertical-align:baseline !important;
-  }
-  .example .example-jp-row .blind-target {
-    flex:0 0 auto !important;
+    padding-left:0 !important;
+    padding-right:0 !important;
+    margin-left:0 !important;
+    margin-right:0 !important;
   }
 }
 </style>
