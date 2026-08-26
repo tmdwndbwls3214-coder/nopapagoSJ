@@ -4973,3 +4973,62 @@ body.dark-mode .empty {
 }
 </style>
 
+
+<style id="mobile-darkmode-final-match">
+/* 모바일 다크모드에서만 적용 — 데스크톱은 절대 변경하지 않음 */
+@media (max-width:700px){
+  body.dark-mode .panel {
+    background:#1e191c !important;
+    color:#e7e0e3 !important;
+    border-color:#49353e !important;
+    box-shadow:0 3px 15px rgba(0,0,0,.18) !important;
+  }
+
+  /* 퀴즈 화면의 문제/답/버튼 영역을 감싸는 전체 표면 */
+  body.dark-mode #app > .panel,
+  body.dark-mode #app .panel {
+    background:#1e191c !important;
+  }
+
+  body.dark-mode .quiz-question {
+    background:linear-gradient(180deg,#211c1f,#1b171a) !important;
+    color:#e7e0e3 !important;
+    border-color:#4b3941 !important;
+  }
+
+  /* 첫 문제 / 이전 문제 / 학습 화면 / 다음 문제를 담는 바깥 영역 */
+  body.dark-mode .toolbar {
+    background:#211b1f !important;
+    color:#e7dfe3 !important;
+    border:1px solid #49363e !important;
+    border-radius:14px !important;
+    box-shadow:none !important;
+  }
+
+  /* 모바일 하단: 학습 / 퀴즈 / 오답 / 설정 */
+  body.dark-mode .mobile-bottom-nav {
+    background:#211b1f !important;
+    border:1px solid #49363e !important;
+    color:#e7dfe3 !important;
+    box-shadow:0 -4px 16px rgba(0,0,0,.30) !important;
+    backdrop-filter:blur(12px);
+  }
+
+  body.dark-mode .mobile-bottom-nav .mobile-nav-btn {
+    background:transparent !important;
+    color:#bbaeb4 !important;
+    border-color:transparent !important;
+  }
+
+  body.dark-mode .mobile-bottom-nav .mobile-nav-btn.active {
+    background:#3a2730 !important;
+    color:#e7a6bc !important;
+  }
+
+  body.dark-mode .mobile-settings-sheet {
+    background:#1e191c !important;
+    color:#e7e0e3 !important;
+    border-color:#49353e !important;
+  }
+}
+</style>
