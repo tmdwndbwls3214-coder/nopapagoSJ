@@ -4546,3 +4546,385 @@ if (typeof showNew10 === "function") showNew10();
 window.REBUILD_PREVIEW = true;
 </script>
 
+
+<style id="desktop-darkmode-palette-final">
+/* =========================================================
+   FINAL DARK MODE PALETTE
+   - Desktop dark-mode palette is the source of truth.
+   - Dark mode only: light mode / layout / JS untouched.
+   ========================================================= */
+
+body.dark-mode {
+    color-scheme: dark !important;
+    background: #141215 !important;
+    color: #e7e0e3 !important;
+}
+
+body.dark-mode header {
+    background: #35242b !important;
+    color: #f3e9ed !important;
+}
+
+body.dark-mode header p {
+    color: #cbbbc1 !important;
+}
+
+/* Main surfaces / cards */
+body.dark-mode .panel,
+body.dark-mode .notice,
+body.dark-mode .word-card,
+body.dark-mode .character-ui,
+body.dark-mode .character-tips,
+body.dark-mode .character-card,
+body.dark-mode .character-empty,
+body.dark-mode .quiz-question,
+body.dark-mode .quiz-result-item,
+body.dark-mode .answer,
+body.dark-mode .answer-explanation,
+body.dark-mode .result-explain,
+body.dark-mode .stat {
+    background: #1e191c !important;
+    color: #e7e0e3 !important;
+    border-color: #49353e !important;
+}
+
+body.dark-mode .word-card,
+body.dark-mode .quiz-result-item,
+body.dark-mode .character-card {
+    box-shadow: 0 3px 15px rgba(0,0,0,.18) !important;
+}
+
+/* Keep quiz question's existing desktop dark gradient */
+body.dark-mode .quiz-question {
+    background: linear-gradient(180deg, #211c1f, #1b171a) !important;
+    border-color: #4b3941 !important;
+    box-shadow: 0 8px 28px rgba(0,0,0,.20) !important;
+}
+
+/* Buttons */
+body.dark-mode button,
+body.dark-mode button.secondary,
+body.dark-mode .category-btn,
+body.dark-mode .character-tab,
+body.dark-mode .quiz-mode-btn,
+body.dark-mode .quiz-tool-btn {
+    background: #2a2226 !important;
+    color: #e8dfe3 !important;
+    border-color: #543d47 !important;
+}
+
+body.dark-mode button.active,
+body.dark-mode .category-btn.active,
+body.dark-mode .character-tab.active {
+    background: #a96880 !important;
+    color: #fff5f8 !important;
+    border-color: #a96880 !important;
+}
+
+/* Mobile category navigation keeps its existing layout, but uses
+   the same dark palette as desktop. */
+@media (max-width: 700px) {
+    body.dark-mode #categoryArea > button,
+    body.dark-mode #categoryArea .category-btn {
+        background: transparent !important;
+        color: #bbaeb4 !important;
+        border-color: transparent !important;
+        box-shadow: none !important;
+    }
+
+    body.dark-mode #categoryArea > button.active,
+    body.dark-mode #categoryArea .category-btn.active {
+        background: transparent !important;
+        color: #d99aac !important;
+        border-color: transparent !important;
+    }
+
+    body.dark-mode #categoryArea > button.active::after,
+    body.dark-mode #categoryArea .category-btn.active::after {
+        background: #a96880 !important;
+    }
+
+    body.dark-mode #categoryArea {
+        border-bottom-color: #3b2d33 !important;
+    }
+}
+
+/* Toggle controls */
+body.dark-mode .toggle-check,
+body.dark-mode .toggle-check.compact,
+body.dark-mode .character-dark-toggle {
+    background: #211b1f !important;
+    color: #ded3d8 !important;
+    border-color: #4d3942 !important;
+}
+
+body.dark-mode .toggle-check:has(input:checked) {
+    background: #302329 !important;
+    border-color: #735061 !important;
+}
+
+body.dark-mode .toggle-box {
+    background: #181417 !important;
+    border-color: #70515d !important;
+}
+
+body.dark-mode .toggle-check input:checked + .toggle-box {
+    background: #a96880 !important;
+    border-color: #a96880 !important;
+}
+
+/* Word / quiz text */
+body.dark-mode .japanese,
+body.dark-mode .character-main,
+body.dark-mode .answer-jp,
+body.dark-mode .answer-korean,
+body.dark-mode .result-jp,
+body.dark-mode .result-answer-jp {
+    color: #f0e8eb !important;
+}
+
+body.dark-mode .hiragana,
+body.dark-mode .korean-reading,
+body.dark-mode .meaning-note,
+body.dark-mode .word-number,
+body.dark-mode .quiz-question-reading,
+body.dark-mode .quiz-prompt-label,
+body.dark-mode .answer-reading,
+body.dark-mode .result-reading {
+    color: #bbaeb4 !important;
+}
+
+body.dark-mode .meaning,
+body.dark-mode .answer-meaning,
+body.dark-mode .result-answer-meaning,
+body.dark-mode .quiz-meaning {
+    color: #ddd3d7 !important;
+}
+
+/* Quiz choices / results */
+body.dark-mode .answer {
+    background: #211c1f !important;
+    color: #e5dce0 !important;
+    border-color: #493840 !important;
+}
+
+body.dark-mode .answer:not(:disabled):hover {
+    border-color: #70515d !important;
+    box-shadow: 0 7px 18px rgba(0,0,0,.18) !important;
+}
+
+body.dark-mode .answer.wrong {
+    background: #2b1d21 !important;
+    border-color: #8d4d5b !important;
+}
+
+body.dark-mode .answer.correct {
+    background: #1d2b25 !important;
+    border-color: #4c8a6b !important;
+}
+
+body.dark-mode .quiz-result-item {
+    background: #211c1f !important;
+    color: #e5dce0 !important;
+}
+
+body.dark-mode .result-answer-box {
+    color: #e5dce0 !important;
+}
+
+body.dark-mode .wrong-box {
+    background: #2b1d21 !important;
+    border-color: #8d4d5b !important;
+}
+
+body.dark-mode .correct-box {
+    background: #1d2b25 !important;
+    border-color: #4c8a6b !important;
+}
+
+body.dark-mode .result-status.ok {
+    color: #9be0b5 !important;
+    background: #24412f !important;
+}
+
+body.dark-mode .result-status.bad {
+    color: #f0a9b3 !important;
+    background: #45252c !important;
+}
+
+body.dark-mode .answer-feedback,
+body.dark-mode .answer-explanation,
+body.dark-mode .result-explain {
+    border-color: #4b3941 !important;
+    background: #262025 !important;
+    color: #cfc2c8 !important;
+}
+
+body.dark-mode .explanation-correct,
+body.dark-mode .success-explain {
+    background: #1d2b25 !important;
+    border-color: #4c8a6b !important;
+}
+
+body.dark-mode .explanation-wrong {
+    background: #2b1d21 !important;
+    border-color: #8d4d5b !important;
+}
+
+/* Progress / examples */
+body.dark-mode .progress {
+    background: #33262c !important;
+}
+
+body.dark-mode .progress-bar {
+    background: #a96880 !important;
+}
+
+body.dark-mode .example {
+    border-top-color: #44333b !important;
+    color: #bdaeb5 !important;
+}
+
+body.dark-mode .example-jp {
+    color: #e5dce0 !important;
+}
+
+body.dark-mode .example-hira {
+    color: #aa9ba2 !important;
+}
+
+body.dark-mode .example-korean-reading,
+body.dark-mode .example-meaning {
+    color: #b8aab1 !important;
+}
+
+/* Inputs / selects / textareas */
+body.dark-mode input,
+body.dark-mode select,
+body.dark-mode textarea {
+    background: #211b1f !important;
+    color: #e7dfe3 !important;
+    border-color: #59414b !important;
+}
+
+body.dark-mode input::placeholder,
+body.dark-mode textarea::placeholder {
+    color: #8f7f87 !important;
+}
+
+/* Character learning */
+body.dark-mode .character-ui {
+    background: #1d181b !important;
+    border-color: #49343d !important;
+    color: #e4d9de !important;
+}
+
+body.dark-mode .character-ui-title {
+    color: #eee4e8 !important;
+}
+
+body.dark-mode .character-ui-sub {
+    color: #aa9aa1 !important;
+}
+
+body.dark-mode .character-tab {
+    background: #292126 !important;
+    color: #cfc0c7 !important;
+    border-color: #4c3841 !important;
+}
+
+body.dark-mode .character-tab.active {
+    background: #8f5d71 !important;
+    color: #fff2f6 !important;
+    border-color: #8f5d71 !important;
+}
+
+body.dark-mode .character-tips {
+    background: linear-gradient(135deg, #292126 0%, #241d21 100%) !important;
+    border-color: #4b3740 !important;
+}
+
+body.dark-mode .character-tips-title {
+    color: #eadde2 !important;
+}
+
+body.dark-mode .character-tips-badge {
+    background: #3a2730 !important;
+    color: #c993a8 !important;
+    border-color: #654654 !important;
+}
+
+body.dark-mode .character-tip-num {
+    background: #49303a !important;
+    color: #e0c5ce !important;
+}
+
+body.dark-mode .character-tip-body {
+    color: #b9aab1 !important;
+}
+
+body.dark-mode .character-tip-body strong {
+    color: #e4d4da !important;
+}
+
+body.dark-mode .character-tip-body code {
+    background: #211a1e !important;
+    border-color: #4a3540 !important;
+    color: #d09aae !important;
+}
+
+body.dark-mode .character-card,
+body.dark-mode .character-card.kanji {
+    background: #211b1f !important;
+    border-color: #49363e !important;
+}
+
+body.dark-mode .character-card .char-main {
+    color: #eee3e7 !important;
+}
+
+body.dark-mode .character-card .char-read {
+    color: #b8a6ae !important;
+}
+
+body.dark-mode .character-card .char-korean {
+    color: #c28ca1 !important;
+}
+
+body.dark-mode .character-card .char-meaning {
+    color: #bcaeb4 !important;
+}
+
+body.dark-mode .character-card .char-example {
+    color: #9f8992 !important;
+}
+
+body.dark-mode .character-empty {
+    background: #211a1e !important;
+    border-color: #513a44 !important;
+    color: #a9959d !important;
+}
+
+/* Mobile settings sheet: same dark surface as the desktop panel */
+body.dark-mode .mobile-settings-sheet,
+body.dark-mode .mobile-settings-sheet-list,
+body.dark-mode .mobile-settings-actions {
+    background: #1e191c !important;
+    color: #e7e0e3 !important;
+    border-color: #49353e !important;
+}
+
+body.dark-mode .mobile-settings-sheet button,
+body.dark-mode .mobile-settings-sheet .toggle-check {
+    background: #211b1f !important;
+    color: #ded3d8 !important;
+    border-color: #4d3942 !important;
+}
+
+/* Footer / empty areas */
+body.dark-mode footer,
+body.dark-mode .empty {
+    color: #a9959d !important;
+}
+</style>
+
