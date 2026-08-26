@@ -1690,6 +1690,67 @@ body.dark-mode input, body.dark-mode select, body.dark-mode textarea { backgroun
 .example-jp-row { display:flex; align-items:center; gap:3px; }
 .speak-example-btn { border:0; background:transparent; padding:1px 3px; margin:0; cursor:pointer; font-size:13px; line-height:1; opacity:.8; }
 .speak-example-btn:hover { transform:scale(1.08); opacity:1; }
+
+/* MOBILE DARK MODE ONLY — final white-area cleanup */
+@media (max-width:700px){
+  body.dark-mode .quiz-mode-group,
+  body.dark-mode .quiz-question,
+  body.dark-mode .quiz-result-item,
+  body.dark-mode .quiz-mode,
+  body.dark-mode .quiz-container,
+  body.dark-mode .quiz-area,
+  body.dark-mode .toolbar,
+  body.dark-mode .pagination,
+  body.dark-mode .quiz-extra-actions {
+    background:#211a1e !important;
+    color:#eee !important;
+    border-color:#5a3d48 !important;
+  }
+
+  body.dark-mode .answer,
+  body.dark-mode .subjective-answer-input,
+  body.dark-mode .quiz-tool-btn {
+    background:#2a2226 !important;
+    color:#eee !important;
+    border-color:#684654 !important;
+  }
+
+  body.dark-mode .mobile-bottom-nav {
+    background:rgba(33,26,30,.97) !important;
+    border-color:#5a3d48 !important;
+    box-shadow:0 9px 26px rgba(0,0,0,.35) !important;
+  }
+  body.dark-mode .mobile-nav-btn {
+    background:transparent !important;
+    color:#cfc3c8 !important;
+  }
+  body.dark-mode .mobile-nav-btn.active {
+    background:#3a2930 !important;
+    color:#d98fa4 !important;
+  }
+  body.dark-mode .mobile-settings-sheet {
+    background:#211a1e !important;
+    color:#eee !important;
+    border-color:#5a3d48 !important;
+  }
+  body.dark-mode .mobile-settings-title,
+  body.dark-mode .mobile-settings-sheet .toggle-label {
+    color:#eee !important;
+  }
+  body.dark-mode .mobile-settings-sheet .toggle-check {
+    background:#2a2226 !important;
+    color:#eee !important;
+    border-color:#684654 !important;
+  }
+
+  /* remove remaining mobile-only white surfaces inside quiz */
+  body.dark-mode .quiz-mode-group *,
+  body.dark-mode .quiz-question *,
+  body.dark-mode .quiz-result-item * {
+    --mobile-white-surface:#211a1e;
+  }
+}
+
 </style>
 <style>
 /* =========================================================
