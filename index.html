@@ -4397,62 +4397,47 @@ body.dark-mode textarea::placeholder {
 })();
 </script>
 
-
-<style id="mobile-example-stable-height-only">
+<style id="mobile-example-blind-structural-fix">
+/* 모바일 예문 블라인드만 레이아웃을 건드리지 않도록 정리
+   본문 카드 높이 고정 로직은 그대로 둡니다. */
 @media (max-width:700px){
-  /* 예문만: 본문 카드 높이 고정 로직은 건드리지 않고,
-     예문 블라인드 전후 부모 높이만 유지 */
-  .word-card .example.mobile-stable-example-height {
-    height: var(--mobile-example-stable-height) !important;
-    min-height: var(--mobile-example-stable-height) !important;
-    box-sizing: border-box !important;
-    overflow: hidden !important;
+  .example .blind-target {
+    display:inline-block !important;
+    width:max-content !important;
+    max-width:100% !important;
+    min-width:0 !important;
+    box-sizing:border-box !important;
+    white-space:nowrap !important;
+    overflow:hidden !important;
+    /* 기존 모바일 공통 blind-target의 세로 padding 때문에
+       예문 한 줄 자체가 커지는 것을 막음 */
+    padding-top:0 !important;
+    padding-bottom:0 !important;
+    margin-top:0 !important;
+    margin-bottom:0 !important;
+    line-height:inherit !important;
+    vertical-align:baseline !important;
+  }
+
+  .example-jp-row {
+    display:flex !important;
+    align-items:baseline !important;
+    min-width:0 !important;
+    line-height:inherit !important;
+  }
+
+  .example-jp-row .example-jp {
+    flex:0 1 auto !important;
+    min-width:0 !important;
+  }
+
+  .example-hira,
+  .example-korean-reading,
+  .example-meaning {
+    line-height:inherit !important;
   }
 }
 </style>
-<script>
-(function(){
-  function isMobile(){ return window.matchMedia('(max-width:700px)').matches; }
-  function measureExamples(){
-    if (!isMobile()) return;
-    document.querySelectorAll('.word-card .example').forEach(function(example){
-      if (!example || example.classList.contains('mobile-stable-example-height')) return;
-      var h = Math.ceil(example.getBoundingClientRect().height);
-      if (h > 0) {
-        example.style.setProperty('--mobile-example-stable-height', h + 'px');
-        example.classList.add('mobile-stable-example-height');
-      }
-    });
-  }
-  function schedule(){
-    requestAnimationFrame(function(){ requestAnimationFrame(measureExamples); });
-  }
-  document.addEventListener('DOMContentLoaded', schedule);
-  window.addEventListener('load', schedule);
-  window.addEventListener('resize', function(){
-    if (!isMobile()) return;
-    document.querySelectorAll('.word-card .example').forEach(function(example){
-      example.classList.remove('mobile-stable-example-height');
-      example.style.removeProperty('--mobile-example-stable-height');
-    });
-    schedule();
-  });
-  var observer = new MutationObserver(function(mutations){
-    var added = false;
-    mutations.forEach(function(m){
-      if (m.type !== 'childList') return;
-      m.addedNodes && m.addedNodes.forEach(function(n){
-        if (n.nodeType === 1 && (n.matches && n.matches('.word-card')) || (n.querySelector && n.querySelector('.word-card'))) added = true;
-      });
-    });
-    if (added) schedule();
-  });
-  document.addEventListener('DOMContentLoaded', function(){
-    observer.observe(document.body, {subtree:true, childList:true});
-  });
-})();
-</script>
-
 </body>
 
 <style id="darkmode-quiz-nav-fix">
