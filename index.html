@@ -1542,9 +1542,39 @@ button.secondary {
   }
   .blind-target, .char-blinded {
     filter: blur(6px) !important; opacity: .36 !important;
-    background: #fff4f7;
+    background: transparent !important;
   }
-  .blind-target::after, .char-blinded::after { content: "탭해서 보기"; }
+  /* 모바일 블라인드는 글자 자체만 흐리게 한다. 가상요소/오버레이는 레이아웃에 참여시키지 않는다. */
+  .blind-target, .char-blinded { position: relative !important; }
+  .blind-target::after, .char-blinded::after { content: none !important; display:none !important; }
+
+  /* 예문 일본어 + 스피커는 블라인드 전후 동일한 열 위치를 유지한다. */
+  .example-jp-row {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) auto !important;
+    align-items: center !important;
+    column-gap: 3px !important;
+    width: 100% !important;
+  }
+  .example-jp-row .example-jp {
+    min-width: 0 !important;
+    width: 100% !important;
+    max-width: none !important;
+    box-sizing: border-box !important;
+  }
+  .example-jp-row .speak-example-btn {
+    grid-column: 2 !important;
+    justify-self: end !important;
+    flex: none !important;
+    width: 22px !important;
+    min-width: 22px !important;
+    max-width: 22px !important;
+    height: 22px !important;
+    padding: 1px 3px !important;
+    margin: 0 !important;
+    box-sizing: border-box !important;
+    transform: none !important;
+  }
   .character-grid { grid-template-columns: repeat(4,minmax(0,1fr)) !important; gap: 7px !important; }
   .character-card {
     background: #fffefe !important; border: 1px solid var(--m-line) !important;
@@ -1751,6 +1781,58 @@ body.dark-mode input, body.dark-mode select, body.dark-mode textarea { backgroun
   }
 }
 
+
+/* =========================================================
+   학습 기록 UI — 기존 화면 스타일을 건드리지 않고 기록 화면에만 적용
+========================================================= */
+.learning-record-page { width:100%; }
+.learning-record-box { margin-top:14px; padding:16px; border:1px solid #eadde2; border-radius:12px; background:#fff; }
+.learning-record-box-title { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:12px; }
+.learning-record-box-title h3 { margin:0; font-size:18px; }
+.learning-record-box-title span { font-size:12px; color:#8b7880; }
+.learning-record-actions { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:8px; }
+.learning-record-actions button { min-height:52px; text-align:left; }
+.learning-record-actions button b { float:right; font-size:18px; }
+.learning-record-list-panel { margin-top:14px; padding:16px; border:1px solid #eadde2; border-radius:12px; background:#fff; }
+.learning-record-list-head { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:12px; }
+.learning-record-list-head > div { text-align:left; }
+.learning-record-list-head h3 { margin:0 0 3px; font-size:19px; line-height:1.35; text-align:left; }
+.learning-record-list-head span { font-size:15px; color:#8b7880; text-align:left; }
+.learning-record-list-head button { margin-left:auto; white-space:nowrap; }
+.learning-record-item { padding:13px 4px; border-top:1px solid #eee5e9; }
+.learning-record-item:first-child { border-top:0; }
+.learning-record-item-head { display:flex; justify-content:space-between; gap:10px; font-size:12px; color:#7c6971; }
+.learning-record-item-head span { white-space:nowrap; }
+.learning-record-item-content { display:flex; flex-wrap:wrap; gap:8px 12px; align-items:baseline; margin-top:6px; }
+.learning-record-item-content b { font-size:18px; }
+.learning-record-item-content span { color:#75656c; }
+.learning-record-item-meta { margin-top:5px; font-size:11px; color:#918189; }
+.learning-record-empty { padding:30px 10px; text-align:center; color:#8b7880; }
+.learning-record-view-head { display:flex; align-items:center; gap:12px; }
+.learning-record-view-head h2 { margin:0 0 3px; }
+.learning-record-view-head span { font-size:12px; color:#8b7880; }
+body.dark-mode .learning-record-box,
+body.dark-mode .learning-record-list-panel { background:#211a1e !important; border-color:#5a3d48 !important; color:#eee !important; }
+body.dark-mode .learning-record-box-title span,
+body.dark-mode .learning-record-list-head span,
+body.dark-mode .learning-record-item-head,
+body.dark-mode .learning-record-item-content span,
+body.dark-mode .learning-record-item-meta,
+body.dark-mode .learning-record-empty,
+body.dark-mode .learning-record-view-head span { color:#bdaeb5 !important; }
+body.dark-mode .learning-record-item { border-top-color:#44333b !important; }
+@media (max-width:700px) {
+  .learning-record-box { padding:12px; }
+  .learning-record-actions { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .learning-record-actions button { min-height:48px; font-size:12px; }
+  .learning-record-list-panel { padding:12px; }
+  .learning-record-list-head { align-items:center; flex-direction:row; }
+  .learning-record-list-head h3 { font-size:18px; }
+  .learning-record-list-head span { font-size:14px; }
+  .learning-record-list-head button { width:auto; flex:0 0 auto; }
+  .learning-record-item-head { flex-direction:column; gap:3px; }
+  .learning-record-item-content b { font-size:17px; }
+}
 </style>
 <style>
 /* =========================================================
@@ -1921,6 +2003,213 @@ body.dark-mode input, body.dark-mode select, body.dark-mode textarea { backgroun
 
 </style>
 
+
+<style>
+@media (max-width: 700px){
+  .example-jp, .example-japanese, .example-jp-row{
+    display:inline-flex !important;
+    align-items:center !important;
+    justify-content:flex-start !important;
+    width:auto !important;
+  }
+  .example-jp + button, .example-jp + .speaker, .example-japanese + button, .example-japanese + .speaker,
+  .example-jp-row .speaker, .example-jp-row button{
+    margin-left:6px !important;
+    flex:0 0 auto !important;
+  }
+}
+</style>
+
+<style id="desktop-example-korean-reading-blind-fix">
+@media (min-width:701px){
+  /* 모바일에서 해결한 구조는 유지하고, 데스크톱에서도 예문 한글발음만 동일하게 블라인드한다.
+     부모 박스 크기는 그대로 두고 실제 글자만 가린다. */
+  .word-card .example .example-korean-reading{
+    box-sizing:border-box !important;
+    opacity:1 !important;
+    filter:none !important;
+  }
+  .word-card .example .example-korean-reading.example-korean-blind .example-korean-reading-text{
+    filter:blur(6px) !important;
+    opacity:.36 !important;
+    user-select:none !important;
+  }
+  .word-card .example .example-korean-reading:not(.example-korean-blind) .example-korean-reading-text{
+    color:inherit !important;
+    text-shadow:none !important;
+    -webkit-text-shadow:none !important;
+  }
+}
+</style>
+
+<style id="mobile-blind-background-unification">
+@media (max-width:700px){
+  .blind-target,
+  .char-blinded,
+  .word-card .example .example-jp.blind-target,
+  .word-card .example .example-hira.blind-target,
+  .word-card .example .example-korean-reading.blind-target,
+  .word-card .example .example-meaning.blind-target {
+    background: transparent !important;
+  }
+}
+</style>
+<style id="japanese-quote-banner">
+.japanese-quote-banner{
+  width:100%; max-width:none; margin:0 0 16px; box-sizing:border-box;
+  padding:12px 16px; border:1px solid #d9cdd2; border-radius:12px;
+  background:rgba(255,255,255,.72); color:#3f3338; cursor:pointer; overflow:hidden;
+  user-select:none; -webkit-user-select:none;
+  transition:background .2s ease,border-color .2s ease;
+}
+.japanese-quote-content{opacity:1; transform:translateY(0); transition:opacity .65s ease,transform .65s ease; min-height:4.8em; display:flex; flex-direction:column; justify-content:center;}
+.japanese-quote-content.is-fading{opacity:0; transform:translateY(4px);}
+.japanese-quote-line{display:flex; align-items:baseline; gap:8px; min-width:0; line-height:1.6; font-size:14px;}
+.japanese-quote-label{flex:0 0 auto; color:#765d68; font-weight:700; white-space:nowrap;}
+.japanese-quote-dash{flex:0 0 auto; color:#9a8790;}
+.japanese-quote-text{min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; color:#44373d;}
+.japanese-quote-banner.is-paused{border-color:#bdaeb5; background:rgba(250,247,248,.92);}
+body.dark-mode .japanese-quote-banner{background:#211b1f; color:#e7dfe3; border-color:#49363e;}
+body.dark-mode .japanese-quote-banner.is-paused{background:#2a2226; border-color:#5a5357;}
+body.dark-mode .japanese-quote-label{color:#e7a6bc;}
+body.dark-mode .japanese-quote-dash{color:#a9949e;}
+body.dark-mode .japanese-quote-text{color:#e8dfe3;}
+@media (max-width:700px){
+  .japanese-quote-banner{margin:0 0 12px; width:100%; padding:10px 12px; border-radius:10px;}
+  .japanese-quote-content{min-height:5.4em;}
+  .japanese-quote-line{gap:6px; font-size:12.5px; line-height:1.55;}
+  .japanese-quote-label{max-width:43%; overflow:hidden; text-overflow:ellipsis;}
+}
+</style>
+
+<style id="quote-banner-style">
+.quote-banner {
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0 0 14px;
+  padding: 12px 16px;
+  border: 1px solid #d8d8d8;
+  border-radius: 12px;
+  background: #fff;
+  overflow: hidden;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.quote-banner-content {
+  opacity: 1;
+  transition: opacity .65s ease;
+  min-width: 0;
+}
+.quote-banner-content.is-fading {
+  opacity: 0;
+}
+.quote-title {
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.35;
+  margin-bottom: 5px;
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.quote-line {
+  display: grid;
+  grid-template-columns: 78px minmax(0,1fr);
+  gap: 6px;
+  align-items: baseline;
+  font-size: 14px;
+  line-height: 1.45;
+  text-align: left;
+}
+.quote-line > span:first-child {
+  font-weight: 700;
+  white-space: nowrap;
+}
+.quote-line > span:last-child {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+body.dark-mode .quote-banner {
+  background: #211b1f;
+  border-color: #49363e;
+}
+@media (max-width: 700px) {
+  .quote-banner {
+    padding: 10px 12px;
+    margin-bottom: 12px;
+  }
+  .quote-title { font-size: 14px; }
+  .quote-line { grid-template-columns: 70px minmax(0,1fr); font-size: 13px; }
+}
+</style>
+
+<style id="learning-record-actions-exact-final">
+.learning-record-actions{
+  display:grid !important;
+  grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+  gap:12px 18px !important;
+  width:88% !important;
+  margin:10px auto 6px !important;
+}
+.learning-record-actions > button{
+  box-sizing:border-box !important;
+  width:100% !important;
+  min-width:0 !important;
+  min-height:78px !important;
+  padding:14px 12px !important;
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:center !important;
+  justify-content:center !important;
+  text-align:center !important;
+  gap:5px !important;
+  line-height:1.25 !important;
+  white-space:normal !important;
+}
+.learning-record-actions > button b{
+  display:block !important;
+  margin:0 !important;
+  float:none !important;
+  font-size:19px !important;
+  line-height:1.15 !important;
+  white-space:nowrap !important;
+}
+@media (max-width:700px){
+  .learning-record-actions{
+    display:grid !important;
+    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+    gap:10px 8px !important;
+    width:100% !important;
+    margin:10px 0 6px !important;
+  }
+  .learning-record-actions > button{
+    min-height:72px !important;
+    height:auto !important;
+    padding:10px 6px !important;
+    display:flex !important;
+    flex-direction:column !important;
+    align-items:center !important;
+    justify-content:center !important;
+    text-align:center !important;
+    gap:4px !important;
+    white-space:normal !important;
+    overflow:visible !important;
+    font-size:14px !important;
+    line-height:1.25 !important;
+  }
+  .learning-record-actions > button b{
+    display:block !important;
+    font-size:17px !important;
+    line-height:1.15 !important;
+    white-space:nowrap !important;
+  }
+}
+</style>
+
 </head>
 
 <body>
@@ -1941,9 +2230,21 @@ body.dark-mode input, body.dark-mode select, body.dark-mode textarea { backgroun
 
 <div class="container">
 
+    <!-- 작품 속 일본어 4줄 페이드 배너 -->
+<div id="quoteBanner" class="quote-banner" role="button" tabindex="0"
+     aria-label="작품 속 일본어 콘텐츠. 클릭하여 일시정지하거나 다시 재생합니다.">
+  <div id="quoteBannerContent" class="quote-banner-content">
+    <div id="quoteTitle" class="quote-title"></div>
+    <div class="quote-line"><span>[ 일본어 ]</span><span id="quoteJapanese"></span></div>
+    <div class="quote-line"><span>[ 발음 ]</span><span id="quotePronunciation"></span></div>
+    <div class="quote-line"><span>[ 뜻 ]</span><span id="quoteKorean"></span></div>
+  </div>
+</div>
+
     <div class="panel">
 
-        <div class="study-menu-head">
+        
+<div class="study-menu-head">
             <h2>학습 메뉴</h2>
             <div id="displayToggles" class="display-toggles" aria-label="표시 설정"></div>
         </div>
@@ -1968,6 +2269,7 @@ body.dark-mode input, body.dark-mode select, body.dark-mode textarea { backgroun
 
 </div>
 
+
 <footer>
     <div>일본가서 파파고 쓸거야?</div>
 </footer>
@@ -1981,6 +2283,77 @@ body.dark-mode input, body.dark-mode select, body.dark-mode textarea { backgroun
 <div id="mobileSettingsSheet" class="mobile-settings-sheet" hidden></div>
 
 <script src="nopapagoSJ_data.js"></script>
+<script src="nopapagoSJ_quotes.js"></script>
+<script>
+(function(){
+  'use strict';
+  var banner = document.getElementById('japaneseQuoteBanner');
+  var content = document.getElementById('japaneseQuoteContent');
+  var items = Array.isArray(window.japaneseQuoteData) ? window.japaneseQuoteData : [];
+  if(!banner || !content || !items.length) return;
+
+  var index = 0;
+  var paused = false;
+  var timer = null;
+  var HOLD_MS = 5000;
+  var FADE_MS = 650;
+
+  function esc(value){
+    return String(value == null ? '' : value)
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+      .replace(/>/g,'&gt;').replace(/\"/g,'&quot;').replace(/'/g,'&#39;');
+  }
+
+  function label(item, part){
+    var title = item.title || '';
+    if(item.type === 'animation_ost') return title + ' OST ' + part;
+    return title + ' ' + part;
+  }
+
+  function render(item){
+    content.innerHTML =
+      '<div class="japanese-quote-line"><span class="japanese-quote-label">[ '+esc(label(item,'일본어'))+' ]</span><span class="japanese-quote-dash">-</span><span class="japanese-quote-text">'+esc(item.japanese)+'</span></div>' +
+      '<div class="japanese-quote-line"><span class="japanese-quote-label">[ '+esc(label(item,'발음'))+' ]</span><span class="japanese-quote-dash">-</span><span class="japanese-quote-text">'+esc(item.pronunciation)+'</span></div>' +
+      '<div class="japanese-quote-line"><span class="japanese-quote-label">[ '+esc(item.type === 'animation_ost' ? item.title+' OST' : item.title)+' ]</span><span class="japanese-quote-dash">-</span><span class="japanese-quote-text">'+esc(item.korean)+'</span></div>';
+  }
+
+  function schedule(){
+    clearTimeout(timer);
+    if(paused) return;
+    timer=setTimeout(next,HOLD_MS);
+  }
+
+  function next(){
+    if(paused) return;
+    content.classList.add('is-fading');
+    setTimeout(function(){
+      if(paused){ content.classList.remove('is-fading'); return; }
+      index=(index+1)%items.length;
+      render(items[index]);
+      content.classList.remove('is-fading');
+      schedule();
+    },FADE_MS);
+  }
+
+  function togglePause(){
+    paused=!paused;
+    banner.classList.toggle('is-paused',paused);
+    if(paused){
+      clearTimeout(timer);
+    }else{
+      schedule();
+    }
+  }
+
+  render(items[index]);
+  schedule();
+  banner.addEventListener('click',togglePause);
+  banner.addEventListener('keydown',function(e){
+    if(e.key==='Enter' || e.key===' '){ e.preventDefault(); togglePause(); }
+  });
+  banner.tabIndex=0;
+})();
+</script>
 <script>
 
 /* =========================================================
@@ -2072,6 +2445,174 @@ let state = JSON.parse(
         total: 0
     })
 );
+
+
+/* =========================================================
+   학습 기록 알고리즘 — 데이터 수집/분석 전용
+   기존 UI/퀴즈 표시 로직은 변경하지 않는다.
+========================================================= */
+const LEARNING_STATS_VERSION = 1;
+
+function ensureLearningStats() {
+    if (!state.learningStats || typeof state.learningStats !== "object") {
+        state.learningStats = {
+            version: LEARNING_STATS_VERSION,
+            items: {},
+            history: []
+        };
+    }
+    if (!state.learningStats.items || typeof state.learningStats.items !== "object") {
+        state.learningStats.items = {};
+    }
+    if (!Array.isArray(state.learningStats.history)) {
+        state.learningStats.history = [];
+    }
+    return state.learningStats;
+}
+
+ensureLearningStats();
+
+function recordLearningAttempt(item, itemKey, isCorrect, mode) {
+    if (!item || !itemKey) return;
+
+    const stats = ensureLearningStats();
+    const now = Date.now();
+    const result = isCorrect ? "correct" : "wrong";
+
+    if (!stats.items[itemKey]) {
+        stats.items[itemKey] = {
+            key: itemKey,
+            japanese: String(item[0] ?? ""),
+            reading: String(item[1] ?? ""),
+            meaning: String(item[3] ?? ""),
+            category: String(currentCategory ?? ""),
+            subCategory: String(currentSubCategory ?? ""),
+            attempts: 0,
+            correct: 0,
+            wrong: 0,
+            streak: 0,
+            bestStreak: 0,
+            lastAttempt: 0,
+            lastResult: null,
+            recent: []
+        };
+    }
+
+    const entry = stats.items[itemKey];
+    entry.attempts++;
+    if (isCorrect) {
+        entry.correct++;
+        entry.streak++;
+        entry.bestStreak = Math.max(entry.bestStreak, entry.streak);
+    } else {
+        entry.wrong++;
+        entry.streak = 0;
+    }
+    entry.lastAttempt = now;
+    entry.lastResult = result;
+
+    entry.recent.push({ t: now, r: result });
+    if (entry.recent.length > 20) entry.recent.splice(0, entry.recent.length - 20);
+
+    stats.history.push({
+        t: now,
+        key: itemKey,
+        japanese: String(item[0] ?? ""),
+        reading: String(item[1] ?? ""),
+        meaning: String(item[3] ?? ""),
+        category: String(currentCategory ?? ""),
+        subCategory: String(currentSubCategory ?? ""),
+        mode: String(mode || quizMode || ""),
+        result
+    });
+
+    // 장기간 사용해도 localStorage가 불필요하게 커지지 않도록 최근 5000회만 유지
+    if (stats.history.length > 5000) {
+        stats.history.splice(0, stats.history.length - 5000);
+    }
+}
+
+function getLearningStatsSummary(period) {
+    const stats = ensureLearningStats();
+    const now = Date.now();
+    let from = 0;
+
+    if (period === "today") {
+        const d = new Date();
+        d.setHours(0, 0, 0, 0);
+        from = d.getTime();
+    } else if (period === "week") {
+        from = now - (7 * 24 * 60 * 60 * 1000);
+    } else if (period === "month") {
+        const d = new Date();
+        d.setDate(1);
+        d.setHours(0, 0, 0, 0);
+        from = d.getTime();
+    }
+
+    const rows = from ? stats.history.filter(x => x.t >= from) : stats.history;
+    const correct = rows.reduce((n, x) => n + (x.result === "correct" ? 1 : 0), 0);
+    const wrong = rows.length - correct;
+
+    return {
+        total: rows.length,
+        correct,
+        wrong,
+        rate: rows.length ? Math.round(correct / rows.length * 100) : 0,
+        words: new Set(rows.map(x => x.key)).size
+    };
+}
+
+function getWeakWords(limit = 10) {
+    const stats = ensureLearningStats();
+    const now = Date.now();
+
+    return Object.values(stats.items)
+        .filter(x => x.attempts >= 3)
+        .map(x => {
+            const recent = x.recent.slice(-10);
+            const recentWrong = recent.filter(r => r.r === "wrong").length;
+            const recentRate = recent.length ? recentWrong / recent.length : 0;
+            const overallRate = x.attempts ? x.wrong / x.attempts : 0;
+            const daysSince = x.lastAttempt ? (now - x.lastAttempt) / 86400000 : 999;
+            const recencyWeight = daysSince <= 7 ? 0.7 : 0.3;
+            const weakness = (recentRate * recencyWeight) + (overallRate * (1 - recencyWeight));
+
+            return {
+                ...x,
+                weaknessScore: Math.round(weakness * 1000) / 10,
+                accuracy: Math.round((1 - overallRate) * 100),
+                recentAccuracy: Math.round((1 - recentRate) * 100)
+            };
+        })
+        .sort((a, b) => b.weaknessScore - a.weaknessScore || b.wrong - a.wrong)
+        .slice(0, limit);
+}
+
+function getImprovingWords(limit = 10) {
+    const stats = ensureLearningStats();
+
+    return Object.values(stats.items)
+        .filter(x => x.attempts >= 4 && x.recent.length >= 4)
+        .map(x => {
+            const recent = x.recent.slice(-5);
+            const older = x.recent.slice(0, Math.max(1, x.recent.length - recent.length));
+            const recentAcc = recent.filter(r => r.r === "correct").length / recent.length;
+            const olderAcc = older.length
+                ? older.filter(r => r.r === "correct").length / older.length
+                : (x.attempts ? x.correct / x.attempts : 0);
+
+            return {
+                ...x,
+                improvementScore: Math.round((recentAcc - olderAcc) * 100),
+                accuracy: Math.round((x.correct / x.attempts) * 100),
+                recentAccuracy: Math.round(recentAcc * 100)
+            };
+        })
+        .filter(x => x.improvementScore > 0)
+        .sort((a, b) => b.improvementScore - a.improvementScore)
+        .slice(0, limit);
+}
 
 
 
@@ -3126,13 +3667,14 @@ function renderWordCard(item, number) {
         const exHiragana = normalizeDuplicate(ex.hira);
         const exKorean = normalizeDuplicate(ex.pronunciation);
 
-        // 일본어가 같거나 뜻이 같으면 예문 자체를 숨김.
+        // 예문 표시 여부는 '문장 자체가 본문과 같은 경우'에만 숨깁니다.
+        // 동사/명사는 예문 뜻이 본문 뜻과 같아지는 것이 정상일 수 있으므로
+        // 뜻이 같다는 이유로 예문 전체를 숨기면 안 됩니다.
         if (exJapanese && exJapanese === normalizedJapanese) return false;
-        if (exMeaning && exMeaning === normalizedMeaning) return false;
 
-        // 데이터에 히라가나/한국발음까지 들어 있는 동일 예문도 숨김.
-        if (exHiragana && normalizedHiragana && exHiragana === normalizedHiragana) return false;
-        if (exKorean && normalizedKorean && exKorean === normalizedKorean) return false;
+        // 히라가나/한글발음까지 모두 본문과 동일한 경우에만 동일 항목으로 봅니다.
+        if (exHiragana && normalizedHiragana && exHiragana === normalizedHiragana &&
+            exKorean && normalizedKorean && exKorean === normalizedKorean) return false;
 
         return true;
     }) || null;
@@ -3154,7 +3696,7 @@ function renderWordCard(item, number) {
                         <button type="button" class="speak-example-btn" data-jp="${encodeURIComponent(example.jp || '')}" onclick="event.stopPropagation(); speakJapanese(decodeURIComponent(this.dataset.jp))" title="예문 일본어 발음 듣기">🔊</button>
                     </div>
                     ${example.hira ? `<div class="example-hira ${exampleJapaneseHidden ? 'blind-target' : ''}" onclick="event.stopPropagation(); toggleIndividualBlind('reading', ${index})" title="클릭하여 예문 일본어/히라가나 블라인드/해제">${escapeHtml(example.hira)}</div>` : ''}
-                    ${example.pronunciation ? `<div class="example-korean-reading ${exampleKoreanHidden ? 'blind-target' : ''}" onclick="event.stopPropagation(); toggleIndividualBlind('korean', ${index})" title="클릭하여 예문 한글 발음 블라인드/해제">${escapeHtml(example.pronunciation)}</div>` : ''}
+                    ${example.pronunciation ? `<div class="example-korean-reading ${exampleKoreanHidden ? 'example-korean-blind' : ''}" onclick="event.stopPropagation(); toggleIndividualBlind('korean', ${index})" title="클릭하여 예문 한글 발음 블라인드/해제"><span class="example-korean-reading-text">${escapeHtml(example.pronunciation)}</span></div>` : ''}
                     ${example.meaning ? `<div class="example-meaning ${exampleMeaningHidden ? 'blind-target' : ''}" onclick="event.stopPropagation(); toggleIndividualBlind('meaning', ${index})" title="클릭하여 예문 뜻 블라인드/해제">${escapeHtml(example.meaning)}</div>` : ''}
                 </div>
             ` : ''}
@@ -3229,6 +3771,7 @@ let quizCharacterType = null;
 let quizCharacterGroup = null;
 
 function getQuizItemKey(item) {
+    if (item && item.__statsKey) return item.__statsKey;
     if (quizContext === "characters") {
         return `charquiz::${quizCharacterType}::${quizCharacterGroup}::${String(item?.[0] ?? "")}`;
     }
@@ -3563,6 +4106,7 @@ function submitSubjectiveAnswer() {
         state.wrong[key] = true;
     }
 
+    recordLearningAttempt(item, key, isCorrect, quizMode);
     saveState();
     showQuiz();
 }
@@ -3601,6 +4145,8 @@ function answerQuiz(selected, correct, key) {
         state.wrong[key] = true;
     }
 
+    const item = quizList[quizIndex];
+    recordLearningAttempt(item, key, isCorrect, quizMode);
     saveState();
     showQuiz();
 }
@@ -3800,85 +4346,208 @@ function replayCurrentQuiz() {
    학습 기록
 ========================================================= */
 
-function showStats() {
+function getLearningRecordRows(period, type) {
+    const stats = ensureLearningStats();
+    const now = Date.now();
+    let from = 0;
 
-    const all =
-        Object.values(DATA)
-            .flatMap(category =>
-                Object.values(category)
-            )
-            .flat();
+    if (period === "today") {
+        const d = new Date();
+        d.setHours(0, 0, 0, 0);
+        from = d.getTime();
+    } else if (period === "week") {
+        const d = new Date();
+        const day = d.getDay();
+        const diff = day === 0 ? 6 : day - 1;
+        d.setDate(d.getDate() - diff);
+        d.setHours(0, 0, 0, 0);
+        from = d.getTime();
+    } else if (period === "month") {
+        const d = new Date();
+        d.setDate(1);
+        d.setHours(0, 0, 0, 0);
+        from = d.getTime();
+    }
 
-    const totalItems =
-        all.length;
+    if (type === "correct" || type === "wrong") {
+        return stats.history
+            .filter(x => x.t >= from && x.result === type)
+            .sort((a, b) => b.t - a.t);
+    }
 
-    const seenCount =
-        Object.keys(state.seen)
-            .length;
+    const items = Object.values(stats.items);
+    const periodHistory = from ? stats.history.filter(x => x.t >= from) : stats.history;
+    const counts = {};
+    periodHistory.forEach(x => { counts[x.key] = (counts[x.key] || 0) + 1; });
 
-    const wrongCount =
-        Object.keys(state.wrong)
-            .length;
-
-    const correctCount =
-        Object.values(state.correct)
-            .reduce(
-                (sum, value) =>
-                    sum + value,
-                0
-            );
-
-    document.getElementById("app")
-        .innerHTML = `
-
-        <div class="panel">
-
-            <h2>📊 학습 기록</h2>
-
-            <div class="stats">
-
-                <div class="stat">
-                    전체 항목
-                    <strong>
-                        ${totalItems}
-                    </strong>
-                </div>
-
-                <div class="stat">
-                    학습 완료
-                    <strong>
-                        ${seenCount}
-                    </strong>
-                </div>
-
-                <div class="stat">
-                    현재 오답
-                    <strong>
-                        ${wrongCount}
-                    </strong>
-                </div>
-
-                <div class="stat">
-                    정답 횟수
-                    <strong>
-                        ${correctCount}
-                    </strong>
-                </div>
-
-            </div>
-
-            <div class="toolbar">
-
-                <button
-                    onclick="showNew10()">
-                    돌아가기
-                </button>
-
-            </div>
-
-        </div>
-    `;
+    return items.map(x => {
+        const attemptsInPeriod = counts[x.key] || 0;
+        const correctInPeriod = periodHistory.filter(h => h.key === x.key && h.result === "correct").length;
+        const wrongInPeriod = periodHistory.filter(h => h.key === x.key && h.result === "wrong").length;
+        return {
+            ...x,
+            periodAttempts: attemptsInPeriod,
+            periodCorrect: correctInPeriod,
+            periodWrong: wrongInPeriod,
+            periodAccuracy: attemptsInPeriod ? Math.round(correctInPeriod / attemptsInPeriod * 100) : 0
+        };
+    }).filter(x => {
+        if (type === "learned") {
+            return x.attempts >= 3 && x.accuracy >= 80 && x.streak >= 2;
+        }
+        if (type === "weak") {
+            return x.attempts >= 3 && getWeakWords(9999).some(w => w.key === x.key);
+        }
+        return false;
+    }).sort((a, b) => {
+        if (type === "learned") return (b.accuracy - a.accuracy) || (b.bestStreak - a.bestStreak);
+        const aw = getWeakWords(9999).find(w => w.key === a.key)?.weaknessScore || 0;
+        const bw = getWeakWords(9999).find(w => w.key === b.key)?.weaknessScore || 0;
+        return bw - aw;
+    });
 }
+
+function formatLearningRecordDate(timestamp) {
+    const d = new Date(timestamp);
+    const pad = n => String(n).padStart(2, "0");
+    return `${d.getFullYear()}.${pad(d.getMonth()+1)}.${pad(d.getDate())}`;
+}
+
+function getLearningRecordItemText(row) {
+    return `${row.japanese || ""}${row.reading ? ` · ${row.reading}` : ""}${row.meaning ? ` · ${row.meaning}` : ""}`;
+}
+
+function makeStatsQuizItem(row) {
+    const item = [row.japanese || "", row.reading || "", "", row.meaning || ""];
+    item.__statsKey = row.key;
+    item.__statsCategory = row.category || "";
+    item.__statsSubCategory = row.subCategory || "";
+    return item;
+}
+
+function startLearningRecordQuiz(period, type) {
+    const rows = getLearningRecordRows(period, type);
+    const unique = [];
+    const seen = new Set();
+    rows.forEach(row => {
+        const key = row.key;
+        if (!seen.has(key)) {
+            seen.add(key);
+            unique.push(makeStatsQuizItem(row));
+        }
+    });
+
+    if (!unique.length) {
+        alert("퀴즈로 풀 수 있는 항목이 없습니다.");
+        return;
+    }
+
+    quizContext = "words";
+    quizCharacterType = null;
+    quizCharacterGroup = null;
+    quizMode = "ko-to-jp";
+    quizList = unique.slice(0, 20);
+    quizIndex = 0;
+    quizReturnPage = currentPage;
+    quizAnswers = {};
+    window.quizChoiceOrderCache = {};
+    showQuiz();
+}
+
+function renderLearningRecordList(period, type) {
+    const rows = getLearningRecordRows(period, type);
+    const titleMap = {
+        correct: "정답 횟수",
+        wrong: "틀린 횟수",
+        learned: "학습완료",
+        weak: "주로 틀리는 문제"
+    };
+    const title = titleMap[type] || "학습 기록";
+
+    const list = rows.slice(0, 100).map(row => {
+        const isAttempt = type === "correct" || type === "wrong";
+        const date = formatLearningRecordDate(row.t || row.lastAttempt);
+        const label = isAttempt ? (row.result === "correct" ? "정답" : "오답") : `정답률 ${row.accuracy ?? 0}%`;
+        return `
+            <div class="learning-record-item">
+                <div class="learning-record-item-head">
+                    <strong>${escapeHtml(date)} ${escapeHtml(row.category || "")} - ${escapeHtml(row.subCategory || "")}</strong>
+                    <span>${escapeHtml(label)}</span>
+                </div>
+                <div class="learning-record-item-content">
+                    <b>${escapeHtml(row.japanese || "")}</b>
+                    ${row.reading ? `<span>${escapeHtml(row.reading)}</span>` : ""}
+                    ${row.meaning ? `<span>${escapeHtml(row.meaning)}</span>` : ""}
+                </div>
+                ${!isAttempt ? `<div class="learning-record-item-meta">총 ${row.attempts}회 · 정답 ${row.correct}회 · 오답 ${row.wrong}회 · 최근 정답률 ${row.recentAccuracy ?? row.accuracy}%</div>` : ""}
+            </div>`;
+    }).join("");
+
+    return `
+        <div class="learning-record-list-panel">
+            <div class="learning-record-list-head">
+                <div><h3>${title}</h3><span>${rows.length}개 기록</span></div>
+                <button class="secondary" type="button" onclick="startLearningRecordQuiz('${period}','${type}')">이 목록 퀴즈하기</button>
+            </div>
+            ${list || `<div class="learning-record-empty">해당 기간의 기록이 없습니다.</div>`}
+        </div>`;
+}
+
+function showStats() {
+    const all = Object.values(DATA).flatMap(category => Object.values(category)).flat();
+    const totalItems = all.length;
+
+    const periods = [
+        { key: "all", label: "총 기록" },
+        { key: "today", label: "오늘 기록" },
+        { key: "week", label: "이번 주 기록" },
+        { key: "month", label: "이번 달 기록" }
+    ];
+
+    const boxes = periods.map(period => {
+        const summary = getLearningStatsSummary(period.key === "all" ? "all" : period.key);
+        const learnedCount = getLearningRecordRows(period.key, "learned").length;
+        const weakCount = getLearningRecordRows(period.key, "weak").length;
+
+        return `
+            <section class="learning-record-box">
+                <div class="learning-record-box-title">
+                    <h3>${period.label}</h3>
+                    ${period.key === "all"
+                        ? `<span>전체 항목 ${totalItems}개</span>`
+                        : `<span>풀이 ${summary.total}회 · 정답률 ${summary.rate}%</span>`}
+                </div>
+                <div class="learning-record-actions">
+                    <button type="button" onclick="renderLearningRecordView('${period.key}','correct')">정답 횟수 <b>${summary.correct}개</b></button>
+                    <button type="button" onclick="renderLearningRecordView('${period.key}','wrong')">틀린 횟수 <b>${summary.wrong}개</b></button>
+                    <button type="button" onclick="renderLearningRecordView('${period.key}','learned')">학습완료 <b>${learnedCount}개</b></button>
+                    <button type="button" onclick="renderLearningRecordView('${period.key}','weak')">주로 틀리는 문제 <b>${weakCount}개</b></button>
+                </div>
+            </section>`;
+    }).join("");
+
+    document.getElementById("app").innerHTML = `
+        <div class="panel learning-record-page">
+            <h2>학습 기록</h2>
+            ${boxes}
+            <div class="toolbar" style="justify-content:center">
+                <button onclick="showNew10()">돌아가기</button>
+            </div>
+        </div>`;
+}
+
+function renderLearningRecordView(period, type) {
+    const periodLabel = { all: "총 기록", today: "오늘 기록", week: "이번 주 기록", month: "이번 달 기록" }[period] || "학습 기록";
+    document.getElementById("app").innerHTML = `
+        <div class="panel learning-record-page">
+            <div class="learning-record-view-head">
+                <button class="secondary" type="button" onclick="showStats()">← 학습 기록</button>
+                <div><h2>${periodLabel}</h2><span>선택한 기록</span></div>
+            </div>
+            ${renderLearningRecordList(period, type)}
+        </div>`;
+}
+
 
 
 /* =========================================================
@@ -3985,7 +4654,12 @@ function resetAllData() {
         seen: {},
         wrong: {},
         correct: {},
-        total: 0
+        total: 0,
+        learningStats: {
+            version: LEARNING_STATS_VERSION,
+            items: {},
+            history: []
+        }
     };
 
     saveState();
@@ -4228,12 +4902,12 @@ body.dark-mode .answer:not(:disabled):hover {
 }
 
 body.dark-mode .answer.wrong {
-    background: #2b1d21 !important;
+    background: transparent !important;
     border-color: #8d4d5b !important;
 }
 
 body.dark-mode .answer.correct {
-    background: #1d2b25 !important;
+    background: transparent !important;
     border-color: #4c8a6b !important;
 }
 
@@ -4250,6 +4924,16 @@ body.dark-mode .result-explain {
     border-color: #4b3941 !important;
     background: #262025 !important;
     color: #cfc2c8 !important;
+}
+
+body.dark-mode .answer-feedback { background: transparent !important; }
+
+body.dark-mode .answer.wrong .wrong-feedback {
+    color: #8d4d5b !important;
+}
+
+body.dark-mode .answer.correct .correct-feedback {
+    color: #4c8a6b !important;
 }
 
 body.dark-mode .progress {
@@ -4335,6 +5019,310 @@ body.dark-mode textarea::placeholder {
 }
 </style>
 
+
+<style id="mobile-blind-card-stable-height">
+@media (max-width:700px){
+  .word-card.mobile-stable-card-height {
+    height: var(--mobile-card-stable-height) !important;
+    min-height: var(--mobile-card-stable-height) !important;
+    box-sizing: border-box !important;
+  }
+}
+</style>
+<script>
+(function(){
+  function isMobile(){ return window.matchMedia('(max-width:700px)').matches; }
+  function measureCard(card){
+    if (!isMobile() || !card) return;
+    var blind = card.querySelectorAll('.blind-target, .char-blinded');
+    var states=[];
+    blind.forEach(function(el){
+      states.push({el:el, cls:el.className, style:el.getAttribute('style')});
+      el.classList.remove('blind-target','char-blinded');
+    });
+    card.classList.remove('mobile-stable-card-height');
+    card.style.removeProperty('--mobile-card-stable-height');
+    var h = Math.ceil(card.getBoundingClientRect().height);
+    states.forEach(function(x){
+      x.el.className=x.cls;
+      if(x.style===null) x.el.removeAttribute('style'); else x.el.setAttribute('style',x.style);
+    });
+    if(h>0){
+      card.style.setProperty('--mobile-card-stable-height',h+'px');
+      card.classList.add('mobile-stable-card-height');
+    }
+  }
+  function measureAll(){
+    if(!isMobile()) return;
+    document.querySelectorAll('.word-card').forEach(measureCard);
+  }
+  function schedule(){
+    requestAnimationFrame(function(){ requestAnimationFrame(measureAll); });
+  }
+  window.addEventListener('load', schedule);
+  window.addEventListener('resize', schedule);
+  setTimeout(schedule,300);
+  setTimeout(schedule,900);
+})();
+</script>
+
+<style id="mobile-blind-vertical-exact">
+@media (max-width:700px){
+  /* 블라인드가 요소의 줄 높이/세로 박스를 바꾸지 않도록 원래 레이아웃 타입을 유지 */
+  .word-card > .japanese-row > .japanese.blind-target,
+  .word-card > .hiragana.blind-target,
+  .word-card > .korean-reading.blind-target,
+  .word-card > .meaning.blind-target,
+  .word-card .example-jp-row > .example-jp.blind-target,
+  .word-card .example-hira.blind-target,
+  .word-card .example-korean-reading.blind-target,
+  .word-card .example-meaning.blind-target {
+    display:block !important;
+    width:fit-content !important;
+    max-width:100% !important;
+    min-width:0 !important;
+    height:auto !important;
+    min-height:0 !important;
+    max-height:none !important;
+    box-sizing:border-box !important;
+    white-space:nowrap !important;
+    overflow:hidden !important;
+    vertical-align:baseline !important;
+  }
+
+  /* 일본어는 flex 행의 자식이므로 block이어도 행 높이를 원래 일본어 줄 높이로 유지 */
+  .word-card > .japanese-row > .japanese.blind-target,
+  .word-card .example-jp-row > .example-jp.blind-target {
+    flex:0 0 auto !important;
+    align-self:baseline !important;
+  }
+
+  /* 블라인드 자체에는 세로 여백을 추가하지 않는다. 기존 카드의 여백/line-height는 그대로 사용 */
+  .word-card .blind-target {
+    padding-top:3px !important;
+    padding-bottom:3px !important;
+  }
+
+  /* 예문은 본문처럼 별도 padding을 이미 가지고 있지 않으므로
+     한국발음 블라인드에도 세로 padding을 추가하지 않는다. */
+  .word-card .example-korean-reading.blind-target {
+    padding-top:0 !important;
+    padding-bottom:0 !important;
+    margin-top:0 !important;
+    margin-bottom:0 !important;
+    line-height:1.6 !important;
+  }
+
+  /* blur가 레이아웃 높이를 만들지 않도록 pseudo 요소는 사용하지 않는다 */
+  .word-card .blind-target::after {
+    content:none !important;
+    display:none !important;
+  }
+}
+</style>
+
+<style id="mobile-example-blind-exact-fix">
+@media (max-width:700px){
+  /* 예문도 본문 블라인드와 동일하게: 가로 영역 전체를 덮되, 블라인드 여부가 세로 높이를 바꾸지 않게 한다. */
+  .word-card .example .example-jp-row > .example-jp.blind-target,
+  .word-card .example > .example-hira.blind-target,
+  .word-card .example > .example-korean-reading.blind-target,
+  .word-card .example > .example-meaning.blind-target {
+    box-sizing:border-box !important;
+    display:block !important;
+    width:auto !important;
+    max-width:none !important;
+    min-width:0 !important;
+    height:auto !important;
+    min-height:0 !important;
+    max-height:none !important;
+    padding-top:0 !important;
+    padding-bottom:0 !important;
+    margin-top:0 !important;
+    margin-bottom:0 !important;
+    line-height:inherit !important;
+    white-space:nowrap !important;
+    overflow:hidden !important;
+  }
+
+  /* 일본어 예문은 스피커 버튼을 제외한 가용 가로폭 전체를 사용 */
+  .word-card .example .example-jp-row > .example-jp.blind-target {
+    flex:1 1 auto !important;
+    align-self:stretch !important;
+  }
+
+  /* 예문 각 줄의 원래 세로 간격을 그대로 유지 */
+  .word-card .example .example-hira.blind-target {
+    margin-top:2px !important;
+  }
+  .word-card .example .example-korean-reading.blind-target,
+  .word-card .example .example-meaning.blind-target {
+    margin-top:2px !important;
+  }
+
+  /* 힌트/가상요소는 공간을 차지하지 않는다. */
+  .word-card .example .blind-target::after {
+    content:none !important;
+    display:none !important;
+  }
+}
+</style>
+
+<style id="mobile-example-korean-final-fix">
+@media (max-width:700px){
+  /* 예문 한국발음은 일본어/뜻과 동일한 고정 레이아웃을 사용하고,
+     글자 자체만 시각적으로 가린다. filter/blur를 부모에 적용하지 않아
+     블라인드 전환에 따른 세로 레이아웃 변화가 생기지 않는다. */
+  .word-card .example .example-korean-reading{
+    display:block !important;
+    box-sizing:border-box !important;
+    width:auto !important;
+    max-width:100% !important;
+    min-width:0 !important;
+    height:auto !important;
+    min-height:0 !important;
+    margin-top:2px !important;
+    margin-bottom:0 !important;
+    padding:0 !important;
+    font-size:13px !important;
+    line-height:1.6 !important;
+    white-space:normal !important;
+    word-break:normal !important;
+    overflow-wrap:anywhere !important;
+    overflow:visible !important;
+  }
+  .word-card .example .example-korean-reading-text{
+    display:inline !important;
+    padding:0 !important;
+    margin:0 !important;
+    font:inherit !important;
+    line-height:inherit !important;
+    box-sizing:border-box !important;
+  }
+  .word-card .example .example-korean-reading.example-korean-blind .example-korean-reading-text{
+    color:transparent !important;
+    text-shadow:0 0 7px #a0737f !important;
+    -webkit-text-shadow:0 0 7px #a0737f !important;
+    user-select:none !important;
+  }
+  .word-card .example .example-korean-reading.example-korean-blind{
+    filter:none !important;
+    opacity:1 !important;
+    background:transparent !important;
+  }
+}
+</style>
+<style id="learning-record-ui-tweaks-v2">
+/* 학습 기록 UI만 수정: 기존 화면/퀴즈/데이터 로직은 변경하지 않음 */
+.learning-record-box,
+.learning-record-list-panel { border:1px solid #d8d0d4 !important; }
+.learning-record-actions button { text-align:center !important; font-size:15px !important; }
+.learning-record-actions button b { float:none !important; margin-left:6px; font-size:19px !important; }
+.learning-record-box-title,
+.learning-record-list-head { text-align:center; }
+.learning-record-box-title { justify-content:center; }
+.learning-record-box-title span { margin-left:8px; }
+.learning-record-list-head { justify-content:center; }
+.learning-record-list-head > div { text-align:center; }
+body.dark-mode .learning-record-box,
+body.dark-mode .learning-record-list-panel { border:1px solid #5a5357 !important; }
+body.dark-mode .learning-record-actions button { border:1px solid #5a5357 !important; }
+@media (max-width:700px){
+  .learning-record-actions { grid-template-columns:repeat(2,minmax(0,1fr)) !important; }
+  .learning-record-actions button { font-size:15px !important; min-height:56px !important; }
+}
+</style>
+
+<script id="quote-banner-script">
+(function(){
+  const content = document.getElementById('quoteBannerContent');
+  const banner = document.getElementById('quoteBanner');
+  if (!content || !banner || typeof japaneseQuotes === 'undefined' || !Array.isArray(japaneseQuotes) || !japaneseQuotes.length) return;
+
+  const titleEl = document.getElementById('quoteTitle');
+  const jpEl = document.getElementById('quoteJapanese');
+  const prEl = document.getElementById('quotePronunciation');
+  const koEl = document.getElementById('quoteKorean');
+
+  let index = 0;
+  let paused = false;
+  let timer = null;
+  let transitionTimer = null;
+  const HOLD_MS = 5000;
+  const FADE_MS = 650;
+
+  function makeTitle(item) {
+    const type = item.type || '';
+    const title = item.title || '';
+    const artist = item.artist || '';
+
+    if (type === 'animation_scene') return title + ' 애니 장면 속 명대사';
+    if (type === 'drama_scene') return title + ' 드라마 장면 속 명대사';
+    if (type === 'movie_scene') return title + ' 영화 속 명대사';
+    if (type === 'song') return title + ' - ' + artist + ' 노래 가사';
+    if (type === 'animation_ost') return title + ' OST - ' + (item.songTitle || '') + ' - ' + artist;
+    return title;
+  }
+
+  function render(item) {
+    titleEl.textContent = makeTitle(item);
+    jpEl.textContent = item.japanese || '';
+    prEl.textContent = item.pronunciation || '';
+    koEl.textContent = item.korean || '';
+  }
+
+  function schedule() {
+    clearTimeout(timer);
+    if (paused) return;
+    timer = setTimeout(next, HOLD_MS);
+  }
+
+  function next() {
+    if (paused) return;
+    content.classList.add('is-fading');
+    clearTimeout(transitionTimer);
+    transitionTimer = setTimeout(function(){
+      if (japaneseQuotes.length > 1) {
+        let nextIndex;
+        do {
+          nextIndex = Math.floor(Math.random() * japaneseQuotes.length);
+        } while (nextIndex === index);
+        index = nextIndex;
+      } else {
+        index = 0;
+      }
+      render(japaneseQuotes[index]);
+      requestAnimationFrame(function(){
+        content.classList.remove('is-fading');
+        schedule();
+      });
+    }, FADE_MS);
+  }
+
+  function togglePause(){
+    paused = !paused;
+    if (paused) {
+      clearTimeout(timer);
+      clearTimeout(transitionTimer);
+      content.classList.remove('is-fading');
+    } else {
+      schedule();
+    }
+  }
+
+  banner.addEventListener('click', togglePause);
+  banner.addEventListener('keydown', function(e){
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      togglePause();
+    }
+  });
+
+  index = Math.floor(Math.random() * japaneseQuotes.length);
+  render(japaneseQuotes[index]);
+  schedule();
+})();
+</script>
 </body>
 
 <style id="darkmode-quiz-nav-fix">
@@ -4400,6 +5388,148 @@ body.dark-mode .quiz-return-btn {
     border:1px solid #76505e !important;
     box-sizing:border-box !important;
   }
+}
+</style>
+
+<style id="mobile-example-blind-stable">
+@media (max-width:700px){
+  /* 예문은 블라인드 전후에도 원래 줄바꿈/세로 높이를 그대로 유지한다.
+     본문 블라인드 동작은 건드리지 않는다. */
+  .word-card .example .example-jp.blind-target,
+  .word-card .example .example-hira.blind-target,
+  .word-card .example .example-korean-reading.blind-target,
+  .word-card .example .example-meaning.blind-target {
+    display:block !important;
+    width:auto !important;
+    max-width:100% !important;
+    min-width:0 !important;
+    height:auto !important;
+    min-height:0 !important;
+    max-height:none !important;
+    box-sizing:border-box !important;
+    white-space:normal !important;
+    overflow:visible !important;
+    word-break:normal !important;
+    overflow-wrap:anywhere !important;
+  }
+
+  /* 예문 일본어는 발음 버튼과 같은 flex 행 안에서만 폭을 제한한다.
+     블라인드 상태에서도 본문과 동일하게 줄바꿈 가능한 공간을 사용한다. */
+  .word-card .example-jp-row > .example-jp.blind-target {
+    flex:1 1 auto !important;
+    align-self:stretch !important;
+  }
+}
+</style>
+
+<style id="mobile-example-blind-height-final">
+@media (max-width:700px){
+  /* 예문 블라인드는 가로폭이 아니라 원래 세로 줄 수/높이를 그대로 유지한다.
+     마지막에 존재하는 .blind-target의 nowrap 규칙보다 우선 적용한다. */
+  .word-card .example .example-jp.blind-target,
+  .word-card .example .example-hira.blind-target,
+  .word-card .example .example-korean-reading.blind-target,
+  .word-card .example .example-meaning.blind-target {
+    display:block !important;
+    width:auto !important;
+    max-width:100% !important;
+    min-width:0 !important;
+    height:auto !important;
+    min-height:0 !important;
+    max-height:none !important;
+    white-space:normal !important;
+    overflow:visible !important;
+    word-break:normal !important;
+    overflow-wrap:anywhere !important;
+    box-sizing:border-box !important;
+  }
+  .word-card .example .example-jp-row > .example-jp.blind-target {
+    display:block !important;
+    flex:1 1 auto !important;
+    width:auto !important;
+    align-self:flex-start !important;
+    white-space:normal !important;
+  }
+}
+</style>
+
+
+<style id="mobile-example-blind-vertical-final">
+@media (max-width:700px){
+  /* 예문 블라인드는 가로 레이아웃을 바꾸지 않고 세로 높이만 원래 상태와 동일하게 유지 */
+  .word-card .example .blind-target {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    line-height: inherit !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+  }
+  .word-card .example-jp-row > .example-jp.blind-target {
+    flex: 0 1 auto !important;
+    align-self: center !important;
+  }
+}
+</style>
+
+
+<style id="mobile-example-blind-text-only-final">
+@media (max-width:700px){
+  /* 예문은 본문과 동일하게 "글자 자체만" 블라인드한다.
+     블라인드 상태가 가로폭이나 세로높이에 절대 참여하지 않도록 레이아웃 속성은 원래 값으로 되돌린다. */
+  .word-card .example .example-jp.blind-target,
+  .word-card .example .example-hira.blind-target,
+  .word-card .example .example-korean-reading.blind-target,
+  .word-card .example .example-meaning.blind-target {
+    filter: blur(6px) !important;
+    opacity: .36 !important;
+    background: transparent !important;
+    display: block !important;
+    box-sizing: border-box !important;
+    width: auto !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    white-space: normal !important;
+    overflow: visible !important;
+    word-break: normal !important;
+    overflow-wrap: normal !important;
+    line-height: inherit !important;
+    transform: none !important;
+  }
+
+  /* 일본어 예문은 스피커 버튼과 함께 원래 flex 행을 그대로 유지한다.
+     블라인드 때문에 폭을 늘리거나 줄이지 않는다. */
+  .word-card .example-jp-row > .example-jp.blind-target {
+    flex: 0 1 auto !important;
+    align-self: center !important;
+  }
+
+  /* 예문에는 "탭해서 보기" 오버레이를 만들지 않는다. 텍스트만 흐리게 한다. */
+  .word-card .example .blind-target::after {
+    content: none !important;
+    display: none !important;
+  }
+}
+</style>
+
+<style id="learning-record-ui-tweaks-v3">
+/* 학습 기록의 새 UI만 수정 */
+.learning-record-list-panel,
+.learning-record-item,
+.learning-record-item-head,
+.learning-record-item-content,
+.learning-record-item-meta {
+  text-align: left !important;
+}
+.learning-record-actions button {
+  text-align: center !important;
 }
 </style>
 </html>
@@ -4887,12 +6017,12 @@ body.dark-mode .answer:not(:disabled):hover {
 }
 
 body.dark-mode .answer.wrong {
-    background: #2b1d21 !important;
+    background: transparent !important;
     border-color: #8d4d5b !important;
 }
 
 body.dark-mode .answer.correct {
-    background: #1d2b25 !important;
+    background: transparent !important;
     border-color: #4c8a6b !important;
 }
 
@@ -4945,6 +6075,8 @@ body.dark-mode .explanation-wrong {
 }
 
 /* Progress / examples */
+body.dark-mode .answer-feedback { background: transparent !important; }
+
 body.dark-mode .progress {
     background: #33262c !important;
 }
@@ -5212,23 +6344,52 @@ body.dark-mode .empty {
     overflow:hidden !important;
   }
   .blind-target::after { content:none !important; display:none !important; }
-
-  /* 예문은 원래 세로 블록 구조를 유지한다.
-     공통 blind-target의 inline-block 전환이
-     일본어/히라가나 블라인드 시 다음 줄(발음/뜻)을 위로 밀어 올리지 않게 한다. */
-  .example .example-hira.blind-target,
-  .example .example-korean-reading.blind-target,
-  .example .example-meaning.blind-target {
-    display:block !important;
-    width:max-content !important;
-    max-width:100% !important;
-  }
-  .example-jp-row .example-jp.blind-target {
-    display:block !important;
-    width:max-content !important;
-    max-width:100% !important;
-    flex:0 1 auto !important;
-  }
   .example-jp-row { align-items:center; min-width:0; }
+  .example-jp-row .blind-target { flex:0 1 auto !important; }
 }
+</style>
+
+<style id="mobile-example-korean-reading-lock-final">
+@media (max-width:700px){
+  /* 예문 한국발음: 부모 박스는 완전히 고정하고 글자만 흐린다.
+     부모의 filter/opacity 변화로 인한 미세한 시각적 흔들림을 없앤다. */
+  .word-card .example .example-korean-reading{
+    filter:none !important;
+    opacity:1 !important;
+    transform:none !important;
+    box-sizing:border-box !important;
+  }
+  .word-card .example .example-korean-reading-text{
+    display:inline !important;
+    filter:blur(6px) !important;
+    opacity:.36 !important;
+    transform:none !important;
+  }
+  .word-card .example .example-korean-reading:not(.blind-target) .example-korean-reading-text{
+    filter:none !important;
+    opacity:1 !important;
+  }
+}
+</style>
+
+<style id="mobile-example-korean-reading-spacing-18">
+@media (max-width:700px){
+  /* 한국발음 영역 자체에 항상 같은 상하 여백을 확보한다.
+     블라인드 ON/OFF와 관계없이 동일한 박스 높이를 사용한다. */
+  .word-card .example .example-korean-reading{
+    padding-top: 3px !important;
+    padding-bottom: 3px !important;
+    box-sizing: border-box !important;
+    min-height: calc(1em + 6px) !important;
+  }
+  .word-card .example .example-korean-reading-text{
+    display: inline !important;
+    line-height: inherit !important;
+  }
+}
+</style>
+
+<style>
+/* Only the quiz feedback strip in dark mode: transparent background. */
+body.dark-mode .answer-feedback { background: transparent !important; }
 </style>
